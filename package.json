@@ -1,0 +1,55 @@
+{
+	"name": "bdbuilder",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"dependencies": {
+		"@babel/cli": "^7.12.10",
+		"@babel/core": "^7.12.10",
+		"@babel/plugin-proposal-class-properties": "^7.12.1",
+		"@babel/plugin-transform-modules-commonjs": "^7.12.13",
+		"@babel/plugin-transform-runtime": "^7.12.10",
+		"@babel/plugin-transform-typescript": "^7.12.1",
+		"@babel/preset-env": "^7.12.11",
+		"@babel/preset-react": "^7.12.10",
+		"@babel/preset-typescript": "^7.12.7",
+		"@sucrase/webpack-loader": "^2.0.0",
+		"@types/css": "^0.0.31",
+		"babel-loader": "^8.2.2",
+		"babel-plugin-minify-dead-code-elimination": "^0.5.1",
+		"coffee-loader": "^2.0.0",
+		"css-loader": "^5.0.1",
+		"extra-watch-webpack-plugin": "^1.0.3",
+		"fs-extra": "^9.0.1",
+		"js-beautify": "^1.13.1",
+		"less": "^4.0.0",
+		"less-loader": "^7.2.1",
+		"sass": "^1.32.2",
+		"sass-loader": "^10.1.0",
+		"style-loader": "^2.0.0",
+		"stylus": "^0.54.8",
+		"stylus-loader": "^4.3.1",
+		"sucrase": "^3.17.0",
+		"terser-webpack-plugin": "^5.1.0",
+		"webpack": "^5.11.1",
+		"yargs": "^16.2.0"
+	},
+	"preferGlobal": true,
+	"bin": {
+		"bdbuilder": "./index.js"
+	},
+	"scripts": {
+		"build": "node ./index.js --plugin='./plugins/TestPlugin' --production",
+		"watch": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Kyza/bdbuilder.git"
+	},
+	"author": "Kyza",
+	"license": "UNLICENSED",
+	"bugs": {
+		"url": "https://github.com/Kyza/bdbuilder/issues"
+	},
+	"homepage": "https://github.com/Kyza/bdbuilder#readme"
+}
