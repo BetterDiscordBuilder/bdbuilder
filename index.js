@@ -53,12 +53,11 @@ const jsBuilder = argv.production
 	  };
 
 const pluginPath = path.resolve(argv.plugin);
-const tempPath = path.resolve(path.join(__dirname, "temp"));
-const builtPath = path.resolve(path.join(__dirname, "builds"));
+const tempPath = path.resolve(path.join(".", "temp"));
+const builtPath = path.resolve(path.join(".", "builds"));
 fs.ensureDirSync(tempPath);
 fs.ensureDirSync(builtPath);
 
-let error;
 let startTime = nanoseconds();
 
 fs.ensureFileSync(path.join(tempPath, "index.js"));
@@ -130,9 +129,9 @@ webpack(
 		],
 		externals: [
 			function ({ context, request }, callback) {
-				if (/^(electron)$/.test(request)) {
+				if (/^(discord\/.+)$/.test(request)) {
 					// Externalize to a commonjs module using the request path
-					return callback(null, "commonjs2 " + request);
+					return callback(null, "commonjs2 " + request.replace("discord/", ""));
 				}
 
 				// Continue without externalizing the import
@@ -268,13 +267,15 @@ webpack(
 			.name.replace(/ /g, "")}.plugin.js`;
 
 		const outputPath = path.resolve(path.join(builtPath, bdFileName));
-		fs.unlinkSync(outputPath);
+		try {
+			fs.unlinkSync(outputPath);
+		} catch {}
 
 		let builtCode = fs.readFileSync(path.join(tempPath, "index.js"), "utf-8");
 
 		builtCode = builtCode.replace(
-			"module.exports.LibraryPluginHack",
-			"module.exports.default"
+			"module.exports.LibraryPluginHack = __webpack_exports__",
+			"module.exports = __webpack_exports__.default ?? __webpack_exports__"
 		);
 
 		builtCode = `${generateMeta()}\n${builtCode}`;
