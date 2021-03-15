@@ -131,7 +131,10 @@ webpack(
 			function ({ context, request }, callback) {
 				if (/^(discord\/.+)$/.test(request)) {
 					// Externalize to a commonjs module using the request path
-					return callback(null, "commonjs2 " + request.replace("discord/", ""));
+					return callback(
+						null,
+						"commonjs2 " + request.replace("discord/", "")
+					);
 				}
 
 				// Continue without externalizing the import
@@ -245,7 +248,8 @@ webpack(
 		}
 		if (stats.hasErrors()) {
 			const info = stats.toJson();
-			for (const error of info.errors) console.error(error.message + "\n");
+			for (const error of info.errors)
+				console.error(error.message + "\n");
 		}
 		if (stats.hasWarnings()) {
 			const info = stats.toJson();
@@ -271,7 +275,10 @@ webpack(
 			fs.unlinkSync(outputPath);
 		} catch {}
 
-		let builtCode = fs.readFileSync(path.join(tempPath, "index.js"), "utf-8");
+		let builtCode = fs.readFileSync(
+			path.join(tempPath, "index.js"),
+			"utf-8"
+		);
 
 		builtCode = builtCode.replace(
 			"module.exports.LibraryPluginHack = __webpack_exports__",
@@ -296,7 +303,10 @@ webpack(
 		);
 
 		if (argv.copy) {
-			fs.copySync(outputPath, path.resolve(path.join(argv.copy, bdFileName)));
+			fs.copySync(
+				outputPath,
+				path.resolve(path.join(argv.copy, bdFileName))
+			);
 		}
 
 		fs.rmdirSync(tempPath, { recursive: true });
@@ -307,9 +317,21 @@ function generateMeta() {
 	const manifest = fs.readJSONSync(path.join(pluginPath, "manifest.json"));
 	let meta = "/**";
 	for (const key in manifest) {
-		meta += `\n * @${key} ${
-			key === "name" ? manifest[key].replace(/ /g, "") : manifest[key]
-		}`;
+		switch (key) {
+			case "name":
+				meta += `\n * @${key} ${manifest[key].replace(/ /g, "")}`;
+				break;
+			case "authors":
+				meta += `\n * @${"author"} ${manifest[key]
+					.map((author) => {
+						return author.name;
+					})
+					.join(", ")}`;
+				break;
+			default:
+				meta += `\n * @${key} ${manifest[key]}`;
+				break;
+		}
 	}
 	return (meta += "\n */");
 }
