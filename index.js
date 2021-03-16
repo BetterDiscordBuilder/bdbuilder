@@ -8,6 +8,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
+const { nodes } = require("stylus");
 const beautify = require("js-beautify").js;
 
 function getModule(mod) {
@@ -61,7 +62,7 @@ fs.ensureDirSync(builtPath);
 let startTime = nanoseconds();
 
 fs.ensureFileSync(path.join(tempPath, "index.js"));
-fs.ensureFileSync(path.join(tempPath, "manifest.json"));
+fs.ensureFileSync(path.join(tempPath, "package.json"));
 
 webpack(
 	{
@@ -133,6 +134,20 @@ webpack(
 					startTime = nanoseconds();
 					return callback();
 				}
+
+				// Check if it's in node_modules.
+				const nodeModulesPath = path.resolve(
+					pluginPath,
+					"node_modules"
+				);
+				if (fs.existsSync(nodeModulesPath)) {
+					const nodeModules = fs.readdirSync(nodeModulesPath);
+					if (nodeModules.some((mod) => mod === request)) {
+						console.log("node module", request);
+						return callback();
+					}
+				}
+
 				const fullPath = path.join(context, request);
 				try {
 					if (fs.lstatSync(fullPath).isDirectory()) {
@@ -274,7 +289,7 @@ webpack(
 		if (stats.hasWarnings()) {
 			const info = stats.toJson();
 			for (const warning of info.warnings)
-				console.error(warning.message + "\n");
+				console.warn(warning.message + "\n");
 		}
 
 		if (err || stats.hasErrors())
@@ -287,7 +302,7 @@ webpack(
 		fs.ensureDirSync(tempPath);
 
 		const bdFileName = `${fs
-			.readJSONSync(path.join(argv.plugin, "manifest.json"))
+			.readJSONSync(path.join(argv.plugin, "package.json"))
 			.name.replace(/ /g, "")}.plugin.js`;
 
 		const outputPath = path.resolve(path.join(builtPath, bdFileName));
@@ -322,6 +337,7 @@ webpack(
 			).toLocaleString()}ms.`
 		);
 
+		fs.ensureDirSync(argv.copy);
 		if (argv.copy) {
 			fs.copySync(
 				outputPath,
@@ -334,22 +350,22 @@ webpack(
 );
 
 function generateMeta() {
-	const manifest = fs.readJSONSync(path.join(pluginPath, "manifest.json"));
+	const package = fs.readJSONSync(path.join(pluginPath, "package.json"));
 	let meta = "/**";
-	for (const key in manifest) {
+	for (const key in package) {
 		switch (key) {
 			case "name":
-				meta += `\n * @${key} ${manifest[key].replace(/ /g, "")}`;
+				meta += `\n * @${key} ${package[key].replace(/ /g, "")}`;
 				break;
 			case "authors":
-				meta += `\n * @${"author"} ${manifest[key]
+				meta += `\n * @${"author"} ${package[key]
 					.map((author) => {
 						return author.name;
 					})
 					.join(", ")}`;
 				break;
 			default:
-				meta += `\n * @${key} ${manifest[key]}`;
+				meta += `\n * @${key} ${package[key]}`;
 				break;
 		}
 	}
