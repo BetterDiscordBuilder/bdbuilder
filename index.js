@@ -129,16 +129,36 @@ webpack(
 		],
 		externals: [
 			function ({ context, request }, callback) {
-				if (/^(discord\/.+)$/.test(request)) {
-					// Externalize to a commonjs module using the request path
-					return callback(
-						null,
-						"commonjs2 " + request.replace("discord/", "")
-					);
+				if (context === __dirname) {
+					startTime = nanoseconds();
+					return callback();
 				}
+				const fullPath = path.join(context, request);
+				try {
+					if (fs.lstatSync(fullPath).isDirectory()) {
+						// It's a folder. Check for index.SOMETHING.
+						const files = fs.readdirSync(fullPath);
+						if (files.some((file) => file.startsWith("index."))) {
+							// Continue without externalizing the import
+							return callback();
+						}
+					}
+				} catch {}
+				try {
+					// Test if the file exists, ignore extension.
+					const files = fs.readdirSync(path.join(fullPath, ".."));
+					if (
+						files.some((file) =>
+							file.startsWith(path.basename(fullPath))
+						)
+					) {
+						// Continue without externalizing the import
+						return callback();
+					}
+				} catch {}
 
-				// Continue without externalizing the import
-				callback();
+				// Externalize to a commonjs module using the request path
+				callback(null, "commonjs2 " + request);
 			},
 		],
 		resolve: {
