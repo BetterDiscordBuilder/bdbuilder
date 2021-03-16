@@ -143,7 +143,6 @@ webpack(
 				if (fs.existsSync(nodeModulesPath)) {
 					const nodeModules = fs.readdirSync(nodeModulesPath);
 					if (nodeModules.some((mod) => mod === request)) {
-						console.log("node module", request);
 						return callback();
 					}
 				}
