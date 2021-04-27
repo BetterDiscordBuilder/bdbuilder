@@ -136,10 +136,7 @@ webpack(
 				}
 
 				// Check if it's in node_modules.
-				const nodeModulesPath = path.resolve(
-					pluginPath,
-					"node_modules"
-				);
+				const nodeModulesPath = path.resolve(pluginPath, "node_modules");
 				if (fs.existsSync(nodeModulesPath)) {
 					const nodeModules = fs.readdirSync(nodeModulesPath);
 					if (nodeModules.some((mod) => mod === request)) {
@@ -161,11 +158,7 @@ webpack(
 				try {
 					// Test if the file exists, ignore extension.
 					const files = fs.readdirSync(path.join(fullPath, ".."));
-					if (
-						files.some((file) =>
-							file.startsWith(path.basename(fullPath))
-						)
-					) {
+					if (files.some((file) => file.startsWith(path.basename(fullPath)))) {
 						// Continue without externalizing the import
 						return callback();
 					}
@@ -282,13 +275,11 @@ webpack(
 		}
 		if (stats.hasErrors()) {
 			const info = stats.toJson();
-			for (const error of info.errors)
-				console.error(error.message + "\n");
+			for (const error of info.errors) console.error(error.message + "\n");
 		}
 		if (stats.hasWarnings()) {
 			const info = stats.toJson();
-			for (const warning of info.warnings)
-				console.warn(warning.message + "\n");
+			for (const warning of info.warnings) console.warn(warning.message + "\n");
 		}
 
 		if (err || stats.hasErrors())
@@ -309,10 +300,7 @@ webpack(
 			fs.unlinkSync(outputPath);
 		} catch {}
 
-		let builtCode = fs.readFileSync(
-			path.join(tempPath, "index.js"),
-			"utf-8"
-		);
+		let builtCode = fs.readFileSync(path.join(tempPath, "index.js"), "utf-8");
 
 		builtCode = builtCode.replace(
 			"module.exports.LibraryPluginHack = __webpack_exports__",
@@ -336,12 +324,16 @@ webpack(
 			).toLocaleString()}ms.`
 		);
 
-		fs.ensureDirSync(argv.copy);
 		if (argv.copy) {
-			fs.copySync(
-				outputPath,
-				path.resolve(path.join(argv.copy, bdFileName))
+			fs.ensureDirSync(argv.copy);
+			fs.writeFileSync(
+				path.resolve(path.join(argv.copy, bdFileName)),
+				fs.readFileSync(outputPath, "utf-8")
 			);
+			// fs.copySync(
+			// 	outputPath,
+			// 	path.resolve(path.join(argv.copy, bdFileName))
+			// );
 		}
 
 		fs.rmdirSync(tempPath, { recursive: true });
