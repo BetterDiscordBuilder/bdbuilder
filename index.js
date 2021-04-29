@@ -10,6 +10,7 @@ const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const { nodes } = require("stylus");
 const beautify = require("js-beautify").js;
+const zlibwrapper = require("./zlibwrapper");
 
 function getModule(mod) {
 	return path.resolve(path.join(__dirname, "node_modules", mod));
@@ -129,6 +130,12 @@ webpack(
 			// }),
 		],
 		externals: [
+			{
+				"react": ["global BdApi", "React"],
+				"react-dom": ["global BdApi", "ReactDOM"],
+				"@zlibrary": "assign PluginApi",
+				"@zlibrary/plugin": "assign BasePlugin"
+			},
 			function ({ context, request }, callback) {
 				if (context === __dirname) {
 					startTime = nanoseconds();
@@ -140,11 +147,9 @@ webpack(
 					pluginPath,
 					"node_modules"
 				);
+				// console.log(nodeModulesPath, request);
 				if (fs.existsSync(nodeModulesPath)) {
-					const nodeModules = fs.readdirSync(nodeModulesPath);
-					if (nodeModules.some((mod) => mod === request)) {
-						return callback();
-					}
+					if (fs.existsSync(path.join(nodeModulesPath, request))) return callback();
 				}
 
 				const fullPath = path.join(context, request);
@@ -178,6 +183,7 @@ webpack(
 		resolve: {
 			extensions: [
 				".js",
+				".mjs",
 				".jsx",
 				".ts",
 				".tsx",
@@ -221,12 +227,7 @@ webpack(
 					test: /\.s[ac]ss$/i,
 					use: [
 						stylesheetLoader,
-						{
-							loader: "css-loader",
-							options: {
-								modules: true,
-							},
-						},
+						"css-loader",
 						"sass-loader",
 					],
 				},
@@ -267,12 +268,12 @@ webpack(
 					use: {
 						loader: "coffee-loader",
 					}, // cool not gonna test it have fun square
-				},
+				}
 			],
 		},
 	},
 	(err, stats) => {
-		console.clear();
+		// console.clear();
 		if (err) {
 			console.error((err.stack || err) + "\n");
 			if (details) {
@@ -299,27 +300,32 @@ webpack(
 			);
 
 		fs.ensureDirSync(tempPath);
-
-		const bdFileName = `${fs
-			.readJSONSync(path.join(argv.plugin, "package.json"))
-			.name.replace(/ /g, "")}.plugin.js`;
+		const pluginConfig = fs.readJSONSync(path.join(argv.plugin, "package.json"));
+		const bdFileName = `${pluginConfig.info.name.replace(/ /g, "")}.plugin.js`;
 
 		const outputPath = path.resolve(path.join(builtPath, bdFileName));
+		
 		try {
 			fs.unlinkSync(outputPath);
-		} catch {}
+		} catch (error) {
+			console.log("Failed to remove old file:\n", error);
+		}
 
 		let builtCode = fs.readFileSync(
 			path.join(tempPath, "index.js"),
 			"utf-8"
 		);
 
-		builtCode = builtCode.replace(
-			"module.exports.LibraryPluginHack = __webpack_exports__",
-			"module.exports = __webpack_exports__.default ?? __webpack_exports__"
-		);
-
-		builtCode = `${generateMeta()}\n${builtCode}`;
+		if (pluginConfig.zlib) {
+			builtCode = `${generateMeta()}\n${zlibwrapper(builtCode, pluginConfig)}`;
+		} else {
+			builtCode = builtCode.replace(
+				"module.exports.LibraryPluginHack = __webpack_exports__",
+				"module.exports = __webpack_exports__.default ?? __webpack_exports__"
+			);
+	
+			builtCode = `${generateMeta()}\n${builtCode}`;
+		}
 
 		builtCode = beautify(builtCode, {
 			indent_with_tabs: true,
@@ -336,11 +342,11 @@ webpack(
 			).toLocaleString()}ms.`
 		);
 
-		fs.ensureDirSync(argv.copy);
 		if (argv.copy) {
-			fs.copySync(
-				outputPath,
-				path.resolve(path.join(argv.copy, bdFileName))
+			fs.ensureDirSync(argv.copy);
+			fs.writeFileSync(
+				path.resolve(path.join(argv.copy, bdFileName)),
+				fs.readFileSync(outputPath, "utf-8")
 			);
 		}
 
@@ -348,23 +354,32 @@ webpack(
 	}
 );
 
+const metaIgnores = [
+	"zlib",
+	"aliases"
+];
+
 function generateMeta() {
 	const package = fs.readJSONSync(path.join(pluginPath, "package.json"));
 	let meta = "/**";
-	for (const key in package) {
+	for (const key in package.info) {
+		if (metaIgnores.includes)
 		switch (key) {
 			case "name":
-				meta += `\n * @${key} ${package[key].replace(/ /g, "")}`;
+				meta += `\n * @${key} ${package.info[key].replace(/ /g, "")}`;
 				break;
 			case "authors":
-				meta += `\n * @${"author"} ${package[key]
+				meta += `\n * @${"author"} ${package.info[key]
 					.map((author) => {
 						return author.name;
 					})
 					.join(", ")}`;
 				break;
+			case "github_raw":
+				meta += `\n * @updateUrl ${package.info[key]}`;
+				break;
 			default:
-				meta += `\n * @${key} ${package[key]}`;
+				meta += `\n * @${key} ${package.info[key]}`;
 				break;
 		}
 	}
