@@ -345,16 +345,10 @@ webpack(
 	}
 );
 
-const metaIgnores = [
-	"zlib",
-	"aliases"
-];
-
 function generateMeta() {
 	const package = fs.readJSONSync(path.join(pluginPath, "package.json"));
 	let meta = "/**";
 	for (const key in package.info) {
-		if (metaIgnores.includes)
 		switch (key) {
 			case "name":
 				meta += `\n * @${key} ${package.info[key].replace(/ /g, "")}`;
