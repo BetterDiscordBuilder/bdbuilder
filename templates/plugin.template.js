@@ -1,5 +1,4 @@
-module.exports = (code, config) => {
-    return `/*@cc_on
+/*@cc_on
 @if (@_jscript)
     
     // Offer to self-install for clueless users that try to run this directly.
@@ -24,12 +23,13 @@ module.exports = (code, config) => {
 
 /* Generated Code */
 
-const config = ${JSON.stringify(config, null, 4)};
+const config = {{pluginConfig}};
 
 function buildPlugin([BasePlugin, PluginApi]) {
     const module = {exports: {}};
 
-    ${code}
+    {{builtCode}}
+
     const PluginExports = module.exports.LibraryPluginHack;
     return PluginExports.__esModule ? PluginExports.default : PluginExports;
 }
@@ -39,12 +39,12 @@ module.exports = window.hasOwnProperty("ZeresPluginLibrary")
     : class {
         getName() {return config.info.name;}
         getAuthor() {return config.info.authors.map(a => a.name).join(", ");}
-        getDescription() {return \`\${config.info.description}. __**ZeresPluginLibrary was not found! This plugin will not work!**__\`;}
+        getDescription() {return `${config.info.description}. __**ZeresPluginLibrary was not found! This plugin will not work!**__`;}
         getVersion() {return config.info.version;}
         load() {
             BdApi.showConfirmationModal(
                 "Library plugin is needed", 
-                [\`The library plugin needed for \${config.info.name} is missing. Please click Download Now to install it.\`], 
+                [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], 
                 {
                     confirmText: "Download",
                     cancelText: "Cancel",
@@ -61,5 +61,4 @@ module.exports = window.hasOwnProperty("ZeresPluginLibrary")
         stop() {}
     };
 
-/*@end@*/`;    
-}
+/*@end@*/
