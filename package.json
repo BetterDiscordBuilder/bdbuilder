@@ -52,7 +52,7 @@
 		"url": "git+https://github.com/Kyza/bdbuilder.git"
 	},
 	"author": "Kyza",
-	"license": "UNLICENSED",
+	"license": "LGPL 2.1",
 	"bugs": {
 		"url": "https://github.com/Kyza/bdbuilder/issues"
 	},
