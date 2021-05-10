@@ -1,15 +1,17 @@
 module.exports = function (code) {
-	return code.replace(
-		"export default ___CSS_LOADER_EXPORT___;",
-		`let element;
-	export default {add: () => {
-		element = document.createElement("style");
-		element.textContent = ___CSS_LOADER_EXPORT___;
-		document.head.appendChild(element);
-	}, remove: () => {
-		if (!element) return;
-		element.remove();
-		element = null;
-	}}`
-	);
+	return code.replace('export default ___CSS_LOADER_EXPORT___;', 
+	`__plugin_styles__ += \`\n/* \${module.id} */\n\${___CSS_LOADER_EXPORT___}\n\`;
+	let element = null;
+	export default Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals, {
+		appendToDOM: () => {
+			if (element) element.remove();
+			element = document.head.appendChild(Object.assign(document.createElement("style"), {
+				textContent: __plugin_styles__
+			}));
+		},
+		removeFromDOM: () => {
+			if (!element) return;
+			element.remove();
+		}
+	});`)
 };
