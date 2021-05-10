@@ -182,7 +182,19 @@ const buildConfig = {
 			},
 			{
 				test: /\.s[ac]ss$/i,
-				use: [stylesheetLoader, "css-loader", "sass-loader"]
+				use: [
+					stylesheetLoader, 
+					{
+						loader: "css-loader",
+						options: {
+							importLoaders: true,
+							modules: {
+								localIdentName: "[local]-[hash:base64:5]"
+							}
+						}
+					}, 
+					"sass-loader"
+				]
 			},
 			{
 				test: /\.styl$/i,
@@ -246,7 +258,11 @@ webpack(buildConfig, (err, stats) => {
 		console.log("Failed to remove old file:\n", error);
 	}
 	fs.ensureFileSync(tempFile);
-	let builtCode = fs.readFileSync(tempFile, "utf-8");
+	let builtCode = fs.readFileSync(tempFile, "utf-8").replace(
+		'"use strict";',
+		`"use strict";
+		let __plugin_styles__ = "";\n`
+	);
 
 	if (pluginConfig.zlib) {
 		delete pluginConfig.zlib;
