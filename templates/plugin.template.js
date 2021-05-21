@@ -44,7 +44,7 @@ module.exports = window.hasOwnProperty("ZeresPluginLibrary")
         load() {
             BdApi.showConfirmationModal(
                 "Library plugin is needed", 
-                [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], 
+                [`The library plugin needed for ${config.info.name} is missing. Please click Download to install it.`], 
                 {
                     confirmText: "Download",
                     cancelText: "Cancel",

@@ -1,8 +1,25 @@
 {
-	"name": "Test Plugin",
-	"version": "1.0.0",
-	"author": "Kyza",
+	"info": {
+		"name": "Test Plugin",
+		"version": "1.0.0",
+		"authors": [
+			{
+				"name": "Kyza"
+			}
+		]
+	},
+	"build": {
+		"copy": "%AppData%/BetterDiscord/plugins",
+		"flow": true,
+		"alias": {
+			
+		}
+	},
 	"dependencies": {
+		"ffmpeg": "^0.0.4",
+		"ffprobe": "^1.1.2",
+		"ffprobe-static": "^3.0.0",
+		"fluent-ffmpeg": "^2.1.2",
 		"machine-uuid": "^1.2.0"
 	}
 }

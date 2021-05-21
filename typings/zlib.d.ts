@@ -1,3 +1,9 @@
+declare namespace React {
+    export interface ReactElement {}
+    export interface ComponentClass {}
+    export type DispatchWithoutAction = () => void;
+}
+
 interface ReactComponent {
     component: any;
     selector: string | null;
@@ -7,7 +13,7 @@ interface ReactComponent {
 
 type PatcherCallback = (thisObject: any, methodArguments: any[], returnValue: any) => any;
 
-declare module "__discordmodules" {
+declare module "@zlibrary/discord" {
     export const APIModule: {get: (url, options) => Promise<any>};
 
     export const MessageStore: {getMessage: (channelId: string, messageId: string) => any};
@@ -17,17 +23,20 @@ declare module "__discordmodules" {
     export const Dispatcher: {
         dirtyDispatch: (options: {type: string}) => void
     }
+    export const ModalActions: {
+        openModal: (props: {onClose: () => void, transitionState: "1" | "2" | "3"}) => any;
+    }
 }
 
 declare module "@zlibrary" {
-    export const Logger = {
-        log: (...message) => void 0,
-        warn: (...message) => void 0,
-        error: (...message) => void 0,
-        stacktrace: (...message) => void 0,
-        info: (...message) => void 0,
-        debug: (...messsage) => void 0,
-        err: (...message) => void 0
+    export const Logger: {
+        log: (...message: any) => void,
+        warn: (...message: any) => void,
+        error: (...message: any) => void,
+        stacktrace: (...message: any) => void,
+        info: (...message: any) => void,
+        debug: (...messsage: any) => void,
+        err: (...message: any) => void
     };
 
     export class Utilities {
@@ -42,18 +51,18 @@ declare module "@zlibrary" {
         static getComponentByName(name: string, selector: string): Promise<ReactComponent>;
     }
 
-    export const Patcher = {
-        unpatchAll: () => void 0,
-        after: (module: any, method: string, callback: PatcherCallback) => () => void 0,
-        before: (module: any, method: string, callback: PatcherCallback) => () => void 0,
-        instead: (module: any, method: string, callback: PatcherCallback) => () => void 0,
+    export const Patcher: {
+        unpatchAll: () => void,
+        after: (module: any, method: string, callback: PatcherCallback) => () => void,
+        before: (module: any, method: string, callback: PatcherCallback) => () => void,
+        instead: (module: any, method: string, callback: PatcherCallback) => () => void,
     }
 
     export const Components: {
-        ErrorBoundary: class;
+        ErrorBoundary: any;
     }
 
-    export * as DiscordModules from "__discordmodules";
+    export * as DiscordModules from "@zlibrary/discord";
 
     export class WebpackModules {
         static getByProps(...props: string[]): void | any;
@@ -84,15 +93,36 @@ declare module "@zlibrary" {
         static saveSettings(pluginName: string, settings: object): void;
     }
 
+    type MenuItem = {label: string, action: (event: any) => void};
     export class DCM {
-        static buildMenuChildren(setup: Array<{label: string, action: (event: any) => void}>): any;
+        static buildMenuChildren(setup: Array<MenuItem>): any;
+        static buildMenuItem(options: MenuItem): any; 
     }
 
-    export class DiscordContextMenu extends DCM {};
-}
+    export class DiscordContextMenu extends DCM {}
 
-declare module "@zlibrary/discord" {
-    export * from "__discordmodules";
+    type ToastOptions = {
+        type: "info" | "error" | "warning" | "success";
+        timeout: number;
+    };
+    export class Toasts {
+        static show(content: string, options: ToastOptions): void;
+        static success(content: string, options: ToastOptions): void;
+        static warning(content: string, options: ToastOptions): void;
+        static error(content: string, options: ToastOptions): void;
+        static info(content: string, options: ToastOptions): void;
+    }
+
+    type ConfirmModalOptions = {
+        cancelText: string;
+        confirmText: string;
+        onConfirm: () => void;
+        onCancel: () => void;
+        danger: boolean;
+    };
+    export class Modals {
+        static showConfirmationModal(title: string, content: string, options?: ConfirmModalOptions): void
+    }
 }
 
 declare module "@zlibrary/plugin" {

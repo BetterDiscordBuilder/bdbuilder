@@ -1,0 +1,39 @@
+{
+    "@discord/utils": {
+        "joinClassNames": "BdApi.findModule(m => typeof m?.default?.default === 'function')?.default",
+        "useForceUpdate": "BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate",
+        "Logger": "BdApi.findModuleByProps('setLogFn')?.default"
+    },
+    "@discord/components": {
+        "Tooltip": "BdApi.findModuleByDisplayName('Tooltip')",
+        "TooltipContainer": "BdApi.findModuleByProps('TooltipContainer')?.TooltipContainer",
+        "TextInput": "BdApi.findModuleByDisplayName('TextInput')",
+        "SlideIn": "BdApi.findModuleByDisplayName('SlideIn')",
+        "SettingsNotice": "BdApi.findModuleByDisplayName('SettingsNotice')",
+        "TransitionGroup": "BdApi.findModuleByDisplayName('TransitionGroup')",
+        "Button": "BdApi.findModuleByProps('DropdownSizes')",
+        "Flex": "BdApi.findModuleByDisplayName('Flex')"
+    },
+    "@discord/modules": {
+        "Dispatcher": "BdApi.findModuleByProps('dirtyDispatch', 'subscribe')",
+        "EmojiUtils": "BdApi.findModuleByProps('uploadEmoji')",
+        "PermissionUtils": "BdApi.findModuleByProps('computePermissions')"
+    },
+    "@discord/stores": {
+        "Messages": "BdApi.findModuleByProps('getMessage', 'getMessages')",
+        "Channels": "BdApi.findModuleByPorps('getChannel')",
+        "Guilds": "BdApi.findModuleByProps('getGuild')",
+        "SelectedGuilds": "BdApi.findModuleByProps('getGuildId', 'getLastSelectedGuildId')",
+        "SelectedChannels": "BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId')",
+        "Info": "BdApi.findModuleByProps('getCurrentUser')",
+        "Status": "BdApi.findModuleByProps('getStatus')"
+    },
+    "@discord/i18n": "BdApi.findModuleByProps('getLocale')",
+    "@discord/constants": "BdApi.findModuleByProps('API_HOST')",
+    "@discord/contextmenu": "Object.assign({}, BdApi.findModuleByProps('openContextMenu'), BdApi.findModuleByProps('MenuItem'))",
+    "@discord/forms": "BdApi.findModuleByProps('FormItem')",
+    "@discord/scrollbars": "BdApi.findModuleByProps('ScrollerAuto')",
+    "@discord/native": "BdApi.findModuleByProps('requireModule')",
+    "@discord/flux": "BdApi.findModuleByProps('connectStores')",
+    "@discord/modal": "Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal'))"
+}

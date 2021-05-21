@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const yargs = require("yargs/yargs");
+// const FlowWebpackPlugin = require('flow-webpack-plugin')
+require("dotenv").config();
 const {hideBin} = require("yargs/helpers");
 const BitBarWebpackProgressPlugin = require("bitbar-webpack-progress-plugin");
 const argv = yargs(hideBin(process.argv)).argv;
@@ -10,6 +12,7 @@ const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const beautify = require("js-beautify").js;
 const PluginMeta = require("./structs/meta");
+const DiscordImports = require("./imports.json");
 
 String.prototype.format = function (options, open = "{{", close = "}}") {
 	let string = this;
@@ -29,6 +32,7 @@ function nanoseconds() {
 }
 
 const stylesheetLoader = path.resolve(path.join(__dirname, "loaders", "stylesheetLoader.js"));
+const pluginConfig = fs.readJSONSync(path.join(argv.plugin, "package.json"));
 
 const jsBuilder = argv.production
 	? {
@@ -45,6 +49,7 @@ const jsBuilder = argv.production
 				["@babel/typescript", {esModuleInterop: true}]
 			],
 			plugins: [
+				"transform-flow-comments",
 				"@babel/plugin-proposal-class-properties",
 				"minify-dead-code-elimination"
 			]
@@ -54,14 +59,14 @@ const jsBuilder = argv.production
 		loader: getModule("@sucrase/webpack-loader"),
 		options: {
 			production: true,
-			transforms: ["jsx", "typescript", "imports"]
+			transforms: ["jsx", "imports", "typescript"]
 		}
 	};
 
 const pluginPath = path.resolve(argv.plugin);
 const tempPath = path.resolve(path.join(".", "temp"));
 const builtPath = path.resolve(path.join(".", "builds"));
-const pluginConfig = fs.readJSONSync(path.join(argv.plugin, "package.json"));
+const pluginAliases = pluginConfig.build.alias ? pluginConfig.build.alias : {};
 fs.ensureDirSync(tempPath);
 fs.ensureDirSync(builtPath);
 
@@ -76,10 +81,10 @@ const buildConfig = {
 	output: {
 		library: "LibraryPluginHack",
 		libraryTarget: "commonjs2",
-		filename: pluginConfig.main ?? "index.js",
+		filename: pluginConfig.main || "index.js",
 		path: tempPath,
 	},
-	watch: argv.watch ?? false,
+	watch: argv.watch || false,
 	watchOptions: {
 		followSymlinks: true,
 	},
@@ -88,7 +93,8 @@ const buildConfig = {
 			React: ["react"],
 			ReactDOM: ["react-dom"]
 		}),
-		new BitBarWebpackProgressPlugin()
+		new BitBarWebpackProgressPlugin(),
+		// new FlowWebpackPlugin()
 	],
 	externals: [
 		{
@@ -97,7 +103,37 @@ const buildConfig = {
 			"@zlibrary": "assign PluginApi",
 			"@zlibrary/discord": ["assign PluginApi.DiscordModules"],
 			"@zlibrary/plugin": "assign BasePlugin",
-			"https": 'assign require("https")'
+			"https": 'assign require("https")',
+			"styles": `assign {
+				inject: () => {
+					if(__style_element__) __style_element__.remove();
+					__style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {textContent: __plugin_styles__}));
+				},
+				remove: () => {
+					if (__style_element__) {
+						__style_element__.remove();
+						__style_element__ = null;
+					}
+				}
+			}`,
+			...Object.keys(DiscordImports).reduce((modules, module) => {
+				if (typeof DiscordImports[module] === "string") {
+					modules[module] = `assign ${DiscordImports[module]}`;
+				} else {
+					modules[module] = `assign {${Object.keys(DiscordImports[module]).map(e => {
+						e = e.trim();
+						return `get ${e}() {
+							const value = ${DiscordImports[module][e]}; 
+							Object.defineProperty(this, '${e}', {
+								value,
+								configurable: true
+							});
+							return value;
+						}`;
+					}).join(",\n")}}`;
+				}
+				return modules;
+			}, {})
 		},
 		function ({context, request}, callback) {
 			if (context === __dirname) {
@@ -131,8 +167,15 @@ const buildConfig = {
 				}
 			} catch {}
 
-			// Externalize to a commonjs module using the request path
-			callback(null, "commonjs2 " + request);
+			try {
+				const match = Object.keys(buildConfig.resolve.alias).find(e => request.startsWith(e));
+				if (match) {
+					return callback();
+				}
+			} catch {}
+			// // Externalize to a commonjs module using the request path
+			// callback(null, "commonjs2 " + request);
+			throw new Error("Could not resolve depenency: " + request);
 		},
 	],
 	resolve: {
@@ -151,6 +194,10 @@ const buildConfig = {
 			".html",
 			".json"
 		],
+		alias: Object.keys(pluginAliases).reduce((aliases, alias) => {
+			aliases[alias] = path.resolve(argv.plugin, pluginAliases[alias]);
+			return aliases;
+		}, {})
 	},
 	optimization: {
 		minimize: true,
@@ -189,11 +236,12 @@ const buildConfig = {
 						options: {
 							importLoaders: true,
 							modules: {
-								localIdentName: "[local]-[hash:base64:5]"
+								localIdentName: pluginConfig.build.scssHash ? "[local]-[hash:base64:5]" : "[name]-[local]"
 							}
 						}
 					}, 
-					"sass-loader"
+					"sass-loader",
+					// "style-loader"
 				]
 			},
 			{
@@ -248,7 +296,7 @@ webpack(buildConfig, (err, stats) => {
 	const meta = new PluginMeta(pluginConfig);
 	const templatePlugin = fs.readFileSync(path.join(__dirname, "templates", "plugin.template.js"), "utf8");
 	const bdFilename = `${pluginConfig.info.name.replace(/ /g, "")}.plugin.js`;
-	const tempFile = path.join(tempPath, pluginConfig.main ?? "index.js");
+	const tempFile = path.join(tempPath, pluginConfig.main || "index.js");
 
 	const outputPath = path.resolve(path.join(builtPath, bdFilename));
 
@@ -261,13 +309,12 @@ webpack(buildConfig, (err, stats) => {
 	let builtCode = fs.readFileSync(tempFile, "utf-8").replace(
 		'"use strict";',
 		`"use strict";
-		let __plugin_styles__ = "";\n`
+		let __plugin_styles__ = "";
+		let __style_element__ = null;\n`
 	);
 
-	if (pluginConfig.zlib) {
-		delete pluginConfig.zlib;
+	if (pluginConfig.build.zlibrary) {
 		builtCode = `${meta}\n${templatePlugin.format({pluginConfig: JSON.stringify(pluginConfig, null, "\t"), builtCode})}`;
-		pluginConfig.zlib = true;
 	} else {
 		builtCode = builtCode.replace(
 			"module.exports.LibraryPluginHack = __webpack_exports__",
@@ -283,13 +330,17 @@ webpack(buildConfig, (err, stats) => {
 
 	console.log(`Built in ${Math.round((nanoseconds() - startTime) / 1000).toLocaleString()}ms.`);
 
-	if (argv.copy) {
-		fs.ensureDirSync(argv.copy);
+	if (pluginConfig.build.copy) {
+		fs.ensureDirSync(process.env.BDFOLDER);
 		fs.writeFileSync(
-			path.resolve(path.join(argv.copy, bdFilename)),
+			path.resolve(path.join(process.env.BDFOLDER, bdFilename)),
 			builtCode
 		);
 	}
-
-	fs.rmdirSync(tempPath, {recursive: true});
+	try {
+		fs.emptyDirSync(tempPath);
+		fs.rmdirSync(tempPath, {recursive: true});
+	} catch (error) {
+		console.error("Failed to remove tmp path:", error);
+	}
 });

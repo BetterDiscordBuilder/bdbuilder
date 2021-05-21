@@ -1,6 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "types": ["./typings/*"]
+        "baseUrl": ".",
+        "target": "es6"
+    },
+    "typeAcquisition": {
+        "enable": true,
+        "include": [
+            "./typings/*"
+        ]
     }
 }
