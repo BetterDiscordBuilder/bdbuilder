@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const yargs = require("yargs/yargs");
-// const FlowWebpackPlugin = require('flow-webpack-plugin')
 require("dotenv").config();
 const {hideBin} = require("yargs/helpers");
 const BitBarWebpackProgressPlugin = require("bitbar-webpack-progress-plugin");
@@ -12,7 +11,13 @@ const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const beautify = require("js-beautify").js;
 const PluginMeta = require("./structs/meta");
+const PluginReadme = require("./structs/readme");
 const DiscordImports = require("./imports.json");
+
+
+function nullish(what, def) {
+	return typeof what !== "undefined" && what !== null ? what : def;
+}
 
 String.prototype.format = function (options, open = "{{", close = "}}") {
 	let string = this;
@@ -31,10 +36,14 @@ function nanoseconds() {
 	return hrTime[0] * 1000000000 + hrTime[1];
 }
 
+fs.ensureDirSync(path.join(__dirname, "releases"));
 const stylesheetLoader = path.resolve(path.join(__dirname, "loaders", "stylesheetLoader.js"));
 const pluginConfig = fs.readJSONSync(path.join(argv.plugin, "package.json"));
 
-const jsBuilder = argv.production
+const isProduction = Boolean(pluginConfig.build.production || argv.production || argv.release);
+const shouldWatch = Boolean(pluginConfig.build.watch || argv.watch) && !argv.release;
+
+const jsBuilder = isProduction
 	? {
 		loader: getModule("babel-loader"),
 		options: {
@@ -59,9 +68,19 @@ const jsBuilder = argv.production
 		loader: getModule("@sucrase/webpack-loader"),
 		options: {
 			production: true,
-			transforms: ["jsx", "imports", "typescript"]
+			transforms: ["jsx", "typescript"]
 		}
 	};
+
+const cssLoader = {
+	loader: "css-loader",
+	options: {
+		importLoaders: true,
+		modules: {
+			localIdentName: pluginConfig.build.scssHash ? "[local]-[hash:base64:5]" : "[name]-[local]"
+		}
+	}
+};
 
 const pluginPath = path.resolve(argv.plugin);
 const tempPath = path.resolve(path.join(".", "temp"));
@@ -72,10 +91,8 @@ fs.ensureDirSync(builtPath);
 
 let startTime = nanoseconds();
 
-fs.ensureFileSync(path.join(tempPath, "package.json"));
-
 const buildConfig = {
-	mode: "production",
+	mode: isProduction ? "production" : "development",
 	target: "node",
 	entry: pluginPath,
 	output: {
@@ -84,7 +101,7 @@ const buildConfig = {
 		filename: pluginConfig.main || "index.js",
 		path: tempPath,
 	},
-	watch: argv.watch || false,
+	watch: shouldWatch,
 	watchOptions: {
 		followSymlinks: true,
 	},
@@ -93,8 +110,7 @@ const buildConfig = {
 			React: ["react"],
 			ReactDOM: ["react-dom"]
 		}),
-		new BitBarWebpackProgressPlugin(),
-		// new FlowWebpackPlugin()
+		new BitBarWebpackProgressPlugin()
 	],
 	externals: [
 		{
@@ -225,32 +241,19 @@ const buildConfig = {
 		rules: [
 			{
 				test: /\.css$/i,
-				use: [stylesheetLoader, "css-loader"]
+				use: [stylesheetLoader, cssLoader]
 			},
 			{
 				test: /\.s[ac]ss$/i,
-				use: [
-					stylesheetLoader, 
-					{
-						loader: "css-loader",
-						options: {
-							importLoaders: true,
-							modules: {
-								localIdentName: pluginConfig.build.scssHash ? "[local]-[hash:base64:5]" : "[name]-[local]"
-							}
-						}
-					}, 
-					"sass-loader",
-					// "style-loader"
-				]
+				use: [stylesheetLoader, cssLoader, "sass-loader"]
 			},
 			{
 				test: /\.styl$/i,
-				use: [stylesheetLoader, "css-loader", "stylus-loader",]
+				use: [stylesheetLoader, cssLoader, "stylus-loader",]
 			},
 			{
 				test: /\.less$/i,
-				use: [stylesheetLoader, "css-loader", "less-loader"]
+				use: [stylesheetLoader, cssLoader, "less-loader"]
 			},
 			{
 				test: /\.m?(j|t)sx?$/i,
@@ -330,16 +333,38 @@ webpack(buildConfig, (err, stats) => {
 
 	console.log(`Built in ${Math.round((nanoseconds() - startTime) / 1000).toLocaleString()}ms.`);
 
-	if (pluginConfig.build.copy) {
+	if (argv.release) {
+		try {
+			const config = pluginConfig.build.release;
+			if (typeof config !== "object") throw new Error("Invalid release configuration");
+
+			const releaseDir = path.join(__dirname, "releases", pluginConfig.info.name);
+			if (fs.existsSync(releaseDir)) fs.emptyDirSync(releaseDir);
+			else fs.mkdirSync(releaseDir);
+
+			if (nullish(config.readme, true)) {
+				fs.writeFileSync(path.join(releaseDir, "README.md"), new PluginReadme(pluginConfig).toString(), "utf8");
+			}
+
+			if (nullish(config.source, true)) {
+				fs.copy(pluginPath, path.join(releaseDir, "src"), {recursive: true, filter: src => src.indexOf("node_modules") < 0});
+			}
+			
+			fs.writeFileSync(path.join(releaseDir, bdFilename), builtCode);
+		} catch(error) {
+			console.error(`Release build failed!\n`, error);
+		}
+	} else if (pluginConfig.build.copy) {
 		fs.ensureDirSync(process.env.BDFOLDER);
 		fs.writeFileSync(
 			path.resolve(path.join(process.env.BDFOLDER, bdFilename)),
 			builtCode
 		);
 	}
+
 	try {
 		fs.emptyDirSync(tempPath);
-		fs.rmdirSync(tempPath, {recursive: true});
+		fs.rm(tempPath, {recursive: true});
 	} catch (error) {
 		console.error("Failed to remove tmp path:", error);
 	}
