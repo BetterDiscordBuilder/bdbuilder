@@ -47,7 +47,8 @@
 	},
 	"scripts": {
 		"build": "node ./index.js --plugin='./plugins/TestPlugin' --production",
-		"watch": "echo \"Error: no test specified\" && exit 1"
+		"watch": "echo \"Error: no test specified\" && exit 1",
+		"init": "node ./scripts/init.js"
 	},
 	"repository": {
 		"type": "git",
