@@ -110,7 +110,17 @@ const buildConfig = {
 			React: ["react"],
 			ReactDOM: ["react-dom"]
 		}),
-		new BitBarWebpackProgressPlugin()
+		new BitBarWebpackProgressPlugin(),
+		new webpack.ProgressPlugin({
+			activeModules: false,
+			entries: true,
+			modules: true,
+			modulesCount: 5000,
+			profile: false,
+			dependencies: true,
+			dependenciesCount: 10000,
+			percentBy: null,
+		})
 	],
 	externals: [
 		{
@@ -338,7 +348,7 @@ webpack(buildConfig, (err, stats) => {
 			const config = pluginConfig.build.release;
 			if (typeof config !== "object") throw new Error("Invalid release configuration");
 
-			const releaseDir = path.join(__dirname, "releases", pluginConfig.info.name);
+			const releaseDir = nullish(path.join(process.env.RELEASE_FOLDER, pluginConfig.info.name), path.join(__dirname, "releases", pluginConfig.info.name));
 			if (fs.existsSync(releaseDir)) fs.emptyDirSync(releaseDir);
 			else fs.mkdirSync(releaseDir);
 
@@ -364,7 +374,7 @@ webpack(buildConfig, (err, stats) => {
 
 	try {
 		fs.emptyDirSync(tempPath);
-		fs.rm(tempPath, {recursive: true});
+		fs.rmdirSync(tempPath, {recursive: true});
 	} catch (error) {
 		console.error("Failed to remove tmp path:", error);
 	}
