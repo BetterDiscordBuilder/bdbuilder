@@ -76,7 +76,7 @@ const cssLoader = {
 	options: {
 		importLoaders: true,
 		modules: {
-			localIdentName: pluginConfig.build.scssHash ? "[local]-[hash:base64:5]" : "[name]-[local]"
+			localIdentName: pluginConfig.info.name.replace(/ /g, "") + "-[name]-[local]"
 		}
 	}
 };
