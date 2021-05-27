@@ -94,6 +94,20 @@ declare module "@discord/components" {
     Flex.Direction = FlexDirection;
     Flex.Justify = FlexJustify;
     Flex.Wrap = FlexWrap;
+
+    const Sizes: {SIZE_10: string; SIZE_12: string; SIZE_14: string; SIZE_16: string; SIZE_20: string; SIZE_24: string; SIZE_32: string;}
+
+    const Colors: {BRAND: string; CUSTOM: string; ERROR: string; HEADER_PRIMARY: string; HEADER_SECONDARY: string; INTERACTIVE_ACTIVE: string; INTERACTIVE_NORMAL: string; LINK: string; MUTED: string; STANDARD: string; STATUS_GREEN: string; STATUS_RED: string; STATUS_YELLOW: string;}
+
+    type TextProps = {
+        size: string;
+        color: string;
+    };
+
+    export function Text(props: TextProps): ReactElement;
+
+    Text.Colors = Colors;
+    Text.Sizes = Size;
 }
 
 declare module "@discord/modules" {

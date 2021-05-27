@@ -12,7 +12,8 @@
         "SettingsNotice": "BdApi.findModuleByDisplayName('SettingsNotice')",
         "TransitionGroup": "BdApi.findModuleByDisplayName('TransitionGroup')",
         "Button": "BdApi.findModuleByProps('DropdownSizes')",
-        "Flex": "BdApi.findModuleByDisplayName('Flex')"
+        "Flex": "BdApi.findModuleByDisplayName('Flex')",
+        "Text": "BdApi.findModuleByDisplayName('Text')"
     },
     "@discord/modules": {
         "Dispatcher": "BdApi.findModuleByProps('dirtyDispatch', 'subscribe')",
