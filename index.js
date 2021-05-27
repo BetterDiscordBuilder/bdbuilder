@@ -58,7 +58,6 @@ const jsBuilder = isProduction
 				["@babel/typescript", {esModuleInterop: true}]
 			],
 			plugins: [
-				"transform-flow-comments",
 				"@babel/plugin-proposal-class-properties",
 				"minify-dead-code-elimination"
 			]
