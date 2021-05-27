@@ -31,7 +31,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
     {{builtCode}}
 
     const PluginExports = module.exports.LibraryPluginHack;
-    return PluginExports.__esModule ? PluginExports.default : PluginExports;
+    return PluginExports?.__esModule ? PluginExports.default : PluginExports;
 }
 
 module.exports = window.hasOwnProperty("ZeresPluginLibrary")
