@@ -1,3 +1,5 @@
+require("./core/loader");
+/*
 #!/usr/bin/env node
 
 const yargs = require("yargs/yargs");
@@ -91,7 +93,7 @@ fs.ensureDirSync(builtPath);
 let startTime = nanoseconds();
 
 const buildConfig = {
-	mode: isProduction ? "production" : "development",
+	mode: pluginConfig.build.production ? "production" : "development",
 	target: "node",
 	entry: pluginPath,
 	output: {
@@ -370,7 +372,7 @@ webpack(buildConfig, (err, stats) => {
 			builtCode
 		);
 	}
-
+	if (!pluginConfig.build.production) return;
 	try {
 		fs.emptyDirSync(tempPath);
 		fs.rmdirSync(tempPath, {recursive: true});
@@ -378,3 +380,4 @@ webpack(buildConfig, (err, stats) => {
 		console.error("Failed to remove tmp path:", error);
 	}
 });
+*/

@@ -46,7 +46,7 @@ declare module "@discord/utils" {
 declare module "@discord/components" {
     export type TooltipOptions = {text: string, position?: "top", spacing?: "8"};
     export function Tooltip(props: TooltipOptions): React.ReactElement;
-    export function TooltipContainer(props: TooltipOptions): React.ReactElement;
+    export function Tooltip(props: TooltipOptions): React.ReactElement;
     export function TextInput(props: {value: string, onChange: (value: string) => void, placeholder: string}): React.ReactElement;
     export function SlideIn(): React.ReactElement;
     export function TransitionGroup(): React.ReactElement;
@@ -145,6 +145,15 @@ declare module "@discord/i18n" {
 }
 
 declare module "@discord/stores" {
+    export const Users: {
+        getUser: (id: string) => UserObject;
+        getUsers: () => UserObject[];
+    };
+
+    export const SettingsStore: {
+        get status(): "dnd" | "idle" | "online" | "offline";
+    }
+
     export const Messages: {
         getMessage: (channelId: string, messageId: string) => {
             id: string;
@@ -246,4 +255,39 @@ declare module "@discord/modal" {
 
     type ModalContentProps = {children: ReactElement, className?: string, scrollerRef: (element: Element) => void};
     export function ModalContent(props: ModalContentProps): ReactElement;
+}
+
+declare module "@discord/classes" {
+    export class Message {
+        author: UserObject;
+        content: string;
+        id: string;
+        timestamp: Date;
+    }
+
+    export class User {
+        get banner(): string | null;
+        getAvatarURL(): string | null;
+        id: string;
+        avatar: string;
+        username: string;
+        discriminator: string;
+    }
+
+    export class Channel {
+        permissions: BigInt;
+        name: string;
+        id: string;
+        icon: string | null;
+        description: string;
+    }
+
+    export class Timestamp {
+        toDate(): Date;
+        month: number;
+    }
+
+    const Classes = {Message, User, Channel, Timestamp};
+
+    export default Classes;
 }

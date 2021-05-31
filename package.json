@@ -2,7 +2,7 @@
 	"name": "bdbuilder",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "./core/loader.js",
 	"dependencies": {
 		"@babel/cli": "^7.12.10",
 		"@babel/core": "^7.12.10",
@@ -30,20 +30,20 @@
 		"less-loader": "^7.2.1",
 		"raw-loader": "^4.0.2",
 		"regenerator-runtime": "^0.13.7",
-		"sass": "^1.32.2",
+		"sass": "^1.34.0",
 		"sass-loader": "^10.1.0",
 		"source-map": "^0.5.7",
 		"style-loader": "^2.0.0",
 		"stylus": "^0.54.8",
 		"stylus-loader": "^4.3.1",
-		"sucrase": "^3.17.0",
+		"sucrase": "^3.18.1",
 		"terser-webpack-plugin": "^5.1.0",
 		"webpack": "^5.11.1",
 		"yargs": "^16.2.0"
 	},
 	"preferGlobal": true,
 	"bin": {
-		"bdbuilder": "./index.js"
+		"bdbuilder": "./core/loader.js"
 	},
 	"scripts": {
 		"build": "node ./index.js --plugin='./plugins/TestPlugin' --production",
