@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs-extra";
 
-let addonPath = "", argv = {};
+let addonPath = "", argv = {}, builtConfig = {};
 
 export function nullish(what, def) {
 	return isNil(what) ? def : what;
@@ -60,6 +60,14 @@ export function init(addon, argvObj) {
     argv = argvObj;
 };
 
+export function setBuiltConfig(cfg) {
+    builtConfig = cfg;
+};
+
+export function getBuildConfig() {
+    return builtConfig;
+};
+
 export function getPath() {
     return addonPath;
 };
@@ -90,6 +98,8 @@ const Utils = {
     init,
     getPath,
     shouldWatch,
+    setBuiltConfig,
+    getBuildConfig,
     startTime: nanoseconds(),
     get argv() {return argv;}
 };

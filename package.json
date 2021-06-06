@@ -19,7 +19,7 @@
 		"babel-loader": "^8.2.2",
 		"babel-plugin-minify-dead-code-elimination": "^0.5.1",
 		"bitbar-webpack-progress-plugin": "^1.0.0",
-		"coffee-loader": "^2.0.0",
+		"coffee-loader": "^3.0.0",
 		"css-loader": "^5.0.1",
 		"dotenv": "^9.0.2",
 		"extra-watch-webpack-plugin": "^1.0.3",

@@ -1,9 +1,10 @@
 import Utils, {getConfig, nullish} from "./utils.js";
+import path from "path";
 
 export default function resolve() {
     const pluginAliases = nullish(getConfig("build.aliases"), {});
 
-    return {
+    const ret = {
         extensions: [
             ".js",
             ".mjs",
@@ -22,6 +23,10 @@ export default function resolve() {
         alias: Object.keys(pluginAliases).reduce((aliases, alias) => {
             aliases[alias] = path.resolve(Utils.getPath(), pluginAliases[alias]);
             return aliases;
-        }, {})
+        }, {
+            common: path.resolve(__dirname, "..", "common")
+        })
     };
+    
+    return ret;
 };

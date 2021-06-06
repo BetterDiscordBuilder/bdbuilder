@@ -1,4 +1,4 @@
-type ReactElement = React.ReactElement | JSX.Element;
+type ReactElement = React.ReactElement;
 
 declare namespace DiscordNative {
     export const fileManager: {
@@ -31,7 +31,7 @@ declare module "@discord" {
 declare module "@discord/utils" {
     export function joinClassNames(...args: string[] | object[]): string;
     export function useForceUpdate(): React.DispatchWithoutAction;
-    export default class Logger {
+    export class Logger {
         constructor(module: string)
 
         log(...message): void;
@@ -41,6 +41,10 @@ declare module "@discord/utils" {
         trace(...message): void;
         warn(...message): void;
     }
+
+    export const Navigation: {
+        replaceWith: (path: string) => void
+    };
 }
 
 declare module "@discord/components" {
@@ -61,8 +65,9 @@ declare module "@discord/components" {
 
     const ButtonColors: {BLACK: string; BRAND: string; GREEN: string; GREY: string; LINK: string; PRIMARY: string; RED: string; TRANSPARENT: string; WHITE: string; YELLOW: string;}
 
-    export function Button(props: {children: any, looks: string, size: string, dropdownSize: string, color: string}): ReactElement;
+    export function Button(props: {children: any, look: string, size: string, dropdownSize: string, color: string}): ReactElement;
 
+    // @ts-ignore
     Button.Sizes = ButtonSizes;
     Button.Looks = ButtonLooks;
     Button.Colors = ButtonColors;
@@ -95,9 +100,9 @@ declare module "@discord/components" {
     Flex.Justify = FlexJustify;
     Flex.Wrap = FlexWrap;
 
-    const Sizes: {SIZE_10: string; SIZE_12: string; SIZE_14: string; SIZE_16: string; SIZE_20: string; SIZE_24: string; SIZE_32: string;}
+    const TextSizes: {SIZE_10: string; SIZE_12: string; SIZE_14: string; SIZE_16: string; SIZE_20: string; SIZE_24: string; SIZE_32: string;}
 
-    const Colors: {BRAND: string; CUSTOM: string; ERROR: string; HEADER_PRIMARY: string; HEADER_SECONDARY: string; INTERACTIVE_ACTIVE: string; INTERACTIVE_NORMAL: string; LINK: string; MUTED: string; STANDARD: string; STATUS_GREEN: string; STATUS_RED: string; STATUS_YELLOW: string;}
+    const TextColors: {BRAND: string; CUSTOM: string; ERROR: string; HEADER_PRIMARY: string; HEADER_SECONDARY: string; INTERACTIVE_ACTIVE: string; INTERACTIVE_NORMAL: string; LINK: string; MUTED: string; STANDARD: string; STATUS_GREEN: string; STATUS_RED: string; STATUS_YELLOW: string;}
 
     type TextProps = {
         size: string;
@@ -106,8 +111,19 @@ declare module "@discord/components" {
 
     export function Text(props: TextProps): ReactElement;
 
-    Text.Colors = Colors;
-    Text.Sizes = Size;
+    Text.Colors = TextColors;
+    Text.Sizes = TextSizes;
+
+    const Types: {BRAND: string, CUSTOM: string, DANGER: string, PRIMARY: string, SUCCESS: string, WARNING: string};
+
+    type CardProps = {
+        type: string;
+        editable: boolean;
+        className?: string;
+        outline: boolean;
+    };
+
+    export function Card(props: CardProps): ReactElement;
 }
 
 declare module "@discord/modules" {
@@ -128,6 +144,16 @@ declare module "@discord/modules" {
 declare module "@discord/constants" {
     export const API_HOST: string;
     export const Permissions: object;
+    export const ActionTypes: {
+        PRESENCE_UPDATE: string;
+        MESSAGE_CREATE: string;
+        MESSAGE_UPDATE: string;
+        MESSAGE_DELETE: string;
+    };
+    export const Endpoints: {
+        SEARCH_GUILD: (guildId: string) => string;
+        SEARCH_CHANNEL: (channelId: string) => string;
+    };
 }
 
 declare module "@discord/i18n" {
@@ -189,6 +215,82 @@ declare module "@discord/stores" {
     export const Status: {
         getStatus(userId: string): void | "online" | "dnd" | "idle";
         getState(): {clientStatuses: any};
+    };
+    export type UserProfileConnection = {
+        type: string;
+        id: string;
+        name: string; 
+        verified: boolean;
+
+    };
+    export const UserProfile: {
+        getUserProfile(): undefined | {
+            connectedAccounts: UserProfileConnection[]
+        };
+        isFetching: (userId: string) => boolean;
+    };
+
+    export const Memebers: {
+        getMember: (guildId: string, userId: string) => any;
+    };
+
+    export const Activities: {
+        getActivities: (userId: string) => Array<any>;
+    };
+
+    export const Games: {
+        getGame: (application_id: string) => null | {
+            getIconURL: () => string;
+            name: string;
+            id: string;
+        }
+    };
+
+    /**
+     * Be careful
+     */
+    export const Auth: {
+        getId: () => string;
+    };
+
+    export const TypingUsers: {
+        isTyping: (channelId: string, userId: string) => boolean;  
+    };
+}
+
+declare module "@discord/connections" {
+    export type Connection = {
+        color: string;
+        enabled: boolean;
+        getPlatformUserUrl: (user: Connection) => void;
+        icon: {
+            color: string;
+            grey: string;
+            svg: string;
+            white: string;
+        };
+        name: string;
+        type: string;
+    };
+
+    export function get(type: string): Error | Connection;
+    export function map<T>(callbackFn: (connection: Connection, currentIndex: number, target: Array<T>) => any);
+    export function isSupported(type: string): boolean;
+    export function filter<T>(callbackFn: (connection: Connection, currentIndex: number, target: Array<T>) => boolean);
+
+    const Connections: {
+        get,
+        map,
+        isSupported,
+        filter
+    };  
+
+    export default Connections;
+}
+
+declare module "@discord/actions" {
+    export const ProfileActions: {
+        fetchProfile: (userId: string) => Promise<any>;
     }
 }
 
@@ -225,19 +327,22 @@ declare module "@discord/native" {
 
 declare module "@discord/flux" {
     export class Store {
-        emitChanges(): void;
+        constructor(dispatcher: any, events: any)
+
+        emitChange(): void;
         addChangeListener(): void;
         removeChangeListener(): boolean;
     }
 
-    export function useStateFromStores(stores: Array<Flux>, collector: () => any): any;
+    export function useStateFromStores(stores: Array<Store>, collector: () => any): any;
+    export function connectStores(stores: Array<Store>, collector: (props: any) => any): (props: any) => ReactElement;
 }
 
 declare module "@discord/modal" {
     export const ModalSize: {SMALL: "small", MEDIUM: "medium", LARGE: "large", DYNAMIC: "dynamic"};
     
     type ModalProps = {transitionState: 2 | 3, onClose: () => void};
-    export function openModal(component: (props: ModalProps) => React.ReactElement | JSX.Element): string;
+    export function openModal(component: (props: ModalProps) => ReactElement): string;
     
     interface ModalRootProps extends ModalProps {
         children: ReactElement
@@ -250,7 +355,7 @@ declare module "@discord/modal" {
     type ModalHeaderProps = {children: ReactElement, className?: string};
     export function ModalHeader(props: ModalHeaderProps): ReactElement;
 
-    type ModalCloseButtonProps = {focusProps: any, onClick: (event: React.MouseEvent) => void, className?: string, hideOnFullscreen?: boolean};
+    type ModalCloseButtonProps = {focusProps: any, onClick: (event: any) => void, className?: string, hideOnFullscreen?: boolean};
     export function ModalCloseButton(props: ModalCloseButtonProps): ReactElement;
 
     type ModalContentProps = {children: ReactElement, className?: string, scrollerRef: (element: Element) => void};
@@ -283,11 +388,20 @@ declare module "@discord/classes" {
     }
 
     export class Timestamp {
+        constructor(timestamp: any)
+
         toDate(): Date;
         month: number;
     }
 
-    const Classes = {Message, User, Channel, Timestamp};
+    const Classes: {Message, User, Channel, Timestamp};
 
     export default Classes;
+}
+
+declare module "@discord/sanitize" {
+    export function decode(e,t?: any, n?: any, o?: any): any;
+    export function encode(e,t?: any, n?: any, s?: any): any;
+    export function parse(e,t?: any, n?: any, o?: any): any;
+    export function stringify(e,t?: any, n?: any, s?: any): any;
 }

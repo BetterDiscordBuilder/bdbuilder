@@ -1,12 +1,11 @@
-import {ProvidePlugin, ProgressPlugin} from "webpack";
-import BitBarWebpackProgressPlugin from "bitbar-webpack-progress-plugin";
+import {ProvidePlugin, ProgressPlugin, SourceMapDevToolPlugin} from "webpack";
 
-export default [
+
+const Plugins = [
     new ProvidePlugin({
         React: ["react"],
         ReactDOM: ["react-dom"]
     }),
-    // new BitBarWebpackProgressPlugin(), // Removed due to deprecation warning
     new ProgressPlugin({
         activeModules: false,
         entries: true,
@@ -18,3 +17,5 @@ export default [
         percentBy: null
     })
 ];
+
+export default Plugins;

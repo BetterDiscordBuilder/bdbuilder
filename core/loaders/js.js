@@ -17,7 +17,7 @@ export default function js() {
                 ],
                 plugins: [
                     "@babel/plugin-proposal-class-properties",
-                    "minify-dead-code-elimination"
+                    ["minify-dead-code-elimination"]
                 ]
             }
         }

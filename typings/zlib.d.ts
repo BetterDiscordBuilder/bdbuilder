@@ -11,11 +11,10 @@ interface ReactComponent {
     forceUpdateAll: () => void;
 }
 
-type PatcherCallback = (thisObject: any, methodArguments: any[], returnValue: any) => any;
 
 declare module "@zlibrary/discord" {
-    export const APIModule: {get: (url, options) => Promise<any>};
-
+    export const APIModule: {get: (options, callback?: (data: any) => void) => Promise<any>};
+    
     export const MessageStore: {getMessage: (channelId: string, messageId: string) => any};
     export const DiscordConstants: {
         Endpoints: {MESSAGES: (channelId: string) => string;};
@@ -29,6 +28,7 @@ declare module "@zlibrary/discord" {
 }
 
 declare module "@zlibrary" {
+    type PatcherCallback = (thisObject: any, methodArguments: any[], returnValue: any) => any;
     export const Logger: {
         log: (...message: any) => void,
         warn: (...message: any) => void,
@@ -62,7 +62,7 @@ declare module "@zlibrary" {
         ErrorBoundary: any;
     }
 
-    export * as DiscordModules from "@zlibrary/discord";
+    // export * as DiscordModules from "@zlibrary/discord";
 
     export class WebpackModules {
         static getByProps(...props: string[]): void | any;
@@ -79,13 +79,13 @@ declare module "@zlibrary" {
     }
 
     export class ReactTools {
-        static getOwnerInstance(node: Element): any;
-        static createWrappedElement(element: Element): React.ReactElement;
-        static wrapElement(element: Element): React.ComponentClass;
+        static getOwnerInstance(node: Node): any;
+        static createWrappedElement(element: Node): React.ReactElement;
+        static wrapElement(element: Node): React.ComponentClass;
     }
 
     export class DOMTools {
-        static parseHTML(htmlString: string): Element | Element[];
+        static parseHTML(htmlString: string): Node | Node[];
     }
 
     export class PluginUtilities {
@@ -134,9 +134,9 @@ declare module "@zlibrary/plugin" {
         onStart(): void;
         onStop(): void;
         onSwitch(): void;
-        obsever(mutation: MutationEvent): void;
+        obsever(mutation: any): void;
         buildSettingsPanel(): {
-            getElement: () => Element,
+            getElement: () => Node,
             addListener: (callback: () => void) => void
         };
     }

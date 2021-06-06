@@ -11,16 +11,17 @@ export default function externals() {
 
     return [
         {
-            "react": ["global BdApi", "React"],
-            "react-dom": ["global BdApi", "ReactDOM"],
+            "react": ["window BdApi", "React"],
+            "react-dom": ["window BdApi", "ReactDOM"],
             "@zlibrary": "assign PluginApi",
             "@zlibrary/discord": ["assign PluginApi.DiscordModules"],
             "@zlibrary/plugin": "assign BasePlugin",
             "https": 'assign require("https")',
+            "lodash": "assign window._",
             "styles": `assign {
-                    inject: () => {
+                    inject: (name = config.info.name) => {
                         if(__style_element__) __style_element__.remove();
-                        __style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {textContent: __plugin_styles__}));
+                        __style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {id: name, textContent: __plugin_styles__}));
                     },
                     remove: () => {
                         if (__style_element__) {
@@ -55,6 +56,7 @@ export default function externals() {
             }
     
             // Check if it's in node_modules.
+            const config = Utils.getBuildConfig();
             const nodeModulesPath = path.resolve(pluginPath, "node_modules");
             if (fs.existsSync(nodeModulesPath)) {
                 if (fs.existsSync(path.join(nodeModulesPath, request))) return callback();
@@ -90,6 +92,13 @@ export default function externals() {
             if (~builtinModules.indexOf(request)) {
                 return callback(null, "commonjs2 " + request);
             }
+
+            try {
+                if (Object.keys(config.resolve.alias).some(k => k.charAt(k.length - 1) !== "$" && request.startsWith(k))) {
+                    return callback();
+                }
+            } catch {}
+
             // // Externalize to a commonjs module using the request path
             // callback(null, "commonjs2 " + request);
             throw new Error("Could not resolve depenency: " + request);

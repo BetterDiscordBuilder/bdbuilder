@@ -1,9 +1,8 @@
 const fs = require("fs-extra");
 const path = require("path");
 require("dotenv").config();
-
-const [,,type, addonName, ...description] = process.argv;
-
+console.log(process.argv);
+const [,, addonName, ...description] = process.argv;
 const pluginsPath = path.join(__dirname, "..", "plugins");
 const pluginPath = path.join(pluginsPath, addonName);
 

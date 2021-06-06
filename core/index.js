@@ -55,7 +55,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
         resolve: resolve(),
         optimization: optimization
     };
-    
+    Utils.setBuiltConfig(buildConfig);
     webpack(buildConfig, (err, stats) => {
         // console.clear();
         const {build, ...config} = Utils.getConfig();
