@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const path = require("path");
 require("dotenv").config();
 console.log(process.argv);
-const [,, addonName, ...description] = process.argv;
+const [, , addonName, ...description] = process.argv;
 const pluginsPath = path.join(__dirname, "..", "plugins");
 const pluginPath = path.join(pluginsPath, addonName);
 
@@ -17,12 +17,12 @@ fs.writeFileSync(path.join(pluginPath, "package.json"), JSON.stringify({
         description: description.join(" "),
         authors: [
             {
-                name: process.env.USERNAME,
+                name: process.env.DISCORD_USERNAME,
                 discord_id: process.env.DISCORD_ID,
                 github_username: process.env.GITHUB_NAME
             }
         ],
-        github: `https://github.com/${process.env.GITHUB_NAME}/${process.env.GITHUB_REPO}/${addonName}`,
+        github: `https://github.com/${process.env.GITHUB_NAME}/${process.env.GITHUB_REPO}/tree/${process.env.GITHUB_BRANCH}/${addonName}`,
         github_raw: `https://raw.githubusercontent.com/${process.env.GITHUB_NAME}/${process.env.GITHUB_REPO}/master/${addonName}/${addonName}.plugin.js`
     },
     build: {

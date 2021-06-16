@@ -62,7 +62,7 @@ declare module "@zlibrary" {
         ErrorBoundary: any;
     }
 
-    // export * as DiscordModules from "@zlibrary/discord";
+    export * as DiscordModules from "@zlibrary/discord";
 
     export class WebpackModules {
         static getByProps(...props: string[]): void | any;

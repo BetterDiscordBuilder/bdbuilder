@@ -2,23 +2,31 @@ type ReactElement = React.ReactElement;
 
 declare namespace DiscordNative {
     export const fileManager: {
-        saveWithDialog: (options: {title: string, properties: "openDirectory"}) => Promise<{filePaths: string[]}>;
+        saveWithDialog: (options: { title: string, properties: "openDirectory" }) => Promise<{ filePaths: string[] }>;
     };
 }
 
-interface UserObject {
+declare interface UserObject {
     id: string;
+    banner: string | null;
     avatarUrl: string;
     getAvatarURL: (type: "gif" | "webp" | "png") => string;
     createdAt: Date;
 }
 
-interface GuildObject {
+declare interface GuildObject {
     id: string;
     icon: string;
     name: string;
     description: string;
     getIconURL: (type: "gif" | "webp" | "png") => string;
+}
+
+declare interface ChannelOject {
+    id: string;
+    icon: string;
+    name: string;
+    description: string;
 }
 
 declare module "@discord" {
@@ -48,24 +56,24 @@ declare module "@discord/utils" {
 }
 
 declare module "@discord/components" {
-    export type TooltipOptions = {text: string, position?: "top", spacing?: "8"};
+    export type TooltipOptions = { text: string, position?: "top", spacing?: "8" };
     export function Tooltip(props: TooltipOptions): React.ReactElement;
     export function Tooltip(props: TooltipOptions): React.ReactElement;
-    export function TextInput(props: {value: string, onChange: (value: string) => void, placeholder: string}): React.ReactElement;
+    export function TextInput(props: { value: string, onChange: (value: string) => void, placeholder: string }): React.ReactElement;
     export function SlideIn(): React.ReactElement;
     export function TransitionGroup(): React.ReactElement;
-    export function SettingsNotice({onSave, onReset}): React.ReactElement;
+    export function SettingsNotice({ onSave, onReset }): React.ReactElement;
 
     /* Button */
-    const ButtonSizes: {ICON: string, LARGE: string, MAX: string, MEDIUM: string, MIN: string, NONE: string, SMALL: string, TINY: string, XLARGE: string};
+    const ButtonSizes: { ICON: string, LARGE: string, MAX: string, MEDIUM: string, MIN: string, NONE: string, SMALL: string, TINY: string, XLARGE: string };
 
-    const ButtonLooks: {BLANK: string, FILLED: string, INVERTED: string, LINK: string, OUTLINED: string};
+    const ButtonLooks: { BLANK: string, FILLED: string, INVERTED: string, LINK: string, OUTLINED: string };
 
-    const DropdownSizes: {LARGE: "LARGE", MEDIUM: "MEDIUM", SMALL: "SMALL"};
+    const DropdownSizes: { LARGE: "LARGE", MEDIUM: "MEDIUM", SMALL: "SMALL" };
 
-    const ButtonColors: {BLACK: string; BRAND: string; GREEN: string; GREY: string; LINK: string; PRIMARY: string; RED: string; TRANSPARENT: string; WHITE: string; YELLOW: string;}
+    const ButtonColors: { BLACK: string; BRAND: string; GREEN: string; GREY: string; LINK: string; PRIMARY: string; RED: string; TRANSPARENT: string; WHITE: string; YELLOW: string; }
 
-    export function Button(props: {children: any, look: string, size: string, dropdownSize: string, color: string}): ReactElement;
+    export function Button(props: { children: any, look: string, size: string, dropdownSize: string, color: string }): ReactElement;
 
     // @ts-ignore
     Button.Sizes = ButtonSizes;
@@ -74,13 +82,13 @@ declare module "@discord/components" {
     Button.DropdownSizes = DropdownSizes;
 
     /* Flex */
-    const FlexAlign: {START: string, END: string, CENTER: string, STRETCH: string, BASELINE: string};
+    const FlexAlign: { START: string, END: string, CENTER: string, STRETCH: string, BASELINE: string };
 
-    const FlexDirection: {VERTICAL: string, HORIZONTAL: string, HORIZONTAL_REVERSE: string};
+    const FlexDirection: { VERTICAL: string, HORIZONTAL: string, HORIZONTAL_REVERSE: string };
 
-    const FlexJustify: {START: string, END: string, CENTER: string, BETWEEN: string, AROUND: string};
+    const FlexJustify: { START: string, END: string, CENTER: string, BETWEEN: string, AROUND: string };
 
-    const FlexWrap: {NO_WRAP: string, WRAP: string, WRAP_REVERSE: string};
+    const FlexWrap: { NO_WRAP: string, WRAP: string, WRAP_REVERSE: string };
 
     function Child(props: FlexProps): ReactElement;
 
@@ -100,9 +108,9 @@ declare module "@discord/components" {
     Flex.Justify = FlexJustify;
     Flex.Wrap = FlexWrap;
 
-    const TextSizes: {SIZE_10: string; SIZE_12: string; SIZE_14: string; SIZE_16: string; SIZE_20: string; SIZE_24: string; SIZE_32: string;}
+    const TextSizes: { SIZE_10: string; SIZE_12: string; SIZE_14: string; SIZE_16: string; SIZE_20: string; SIZE_24: string; SIZE_32: string; }
 
-    const TextColors: {BRAND: string; CUSTOM: string; ERROR: string; HEADER_PRIMARY: string; HEADER_SECONDARY: string; INTERACTIVE_ACTIVE: string; INTERACTIVE_NORMAL: string; LINK: string; MUTED: string; STANDARD: string; STATUS_GREEN: string; STATUS_RED: string; STATUS_YELLOW: string;}
+    const TextColors: { BRAND: string; CUSTOM: string; ERROR: string; HEADER_PRIMARY: string; HEADER_SECONDARY: string; INTERACTIVE_ACTIVE: string; INTERACTIVE_NORMAL: string; LINK: string; MUTED: string; STANDARD: string; STATUS_GREEN: string; STATUS_RED: string; STATUS_YELLOW: string; }
 
     type TextProps = {
         size: string;
@@ -114,7 +122,7 @@ declare module "@discord/components" {
     Text.Colors = TextColors;
     Text.Sizes = TextSizes;
 
-    const Types: {BRAND: string, CUSTOM: string, DANGER: string, PRIMARY: string, SUCCESS: string, WARNING: string};
+    const Types: { BRAND: string, CUSTOM: string, DANGER: string, PRIMARY: string, SUCCESS: string, WARNING: string };
 
     type CardProps = {
         type: string;
@@ -128,10 +136,10 @@ declare module "@discord/components" {
 
 declare module "@discord/modules" {
     export const Dispatcher: {
-        dispatch: ({type: string}) => void;
-        subscribe: (event: string, listener: ({type: string}) => void) => void;
-        unsubscribe: (event: string, listener: ({type: string}) => void) => void;
-        dirtyDispatch: ({type: string}) => void;
+        dispatch: ({ type: string }) => void;
+        subscribe: (event: string, listener: ({ type: string }) => void) => void;
+        unsubscribe: (event: string, listener: ({ type: string }) => void) => void;
+        dirtyDispatch: ({ type: string }) => void;
     };
     export const EmojiUtils: {
         uploadEmoji: (guildId: string, emojiDataURI: string, name: string) => Promise<void>;
@@ -142,6 +150,8 @@ declare module "@discord/modules" {
 }
 
 declare module "@discord/constants" {
+    export function NOOP(): void;
+    export function NOOP_NULL(): null;
     export const API_HOST: string;
     export const Permissions: object;
     export const ActionTypes: {
@@ -157,9 +167,9 @@ declare module "@discord/constants" {
 }
 
 declare module "@discord/i18n" {
-    type locale = {name: string, englishName: string, code: string, postgresLang: string, enabled: boolean};
+    type locale = { name: string, englishName: string, code: string, postgresLang: string, enabled: boolean };
     export const languages: locale[];
-    export const Messags: object;
+    export const Messages: object;
     export const choosenLocale: string;
     export function getDefaultLocale(): string;
     export function getLocaleInfo(): locale;
@@ -168,6 +178,27 @@ declare module "@discord/i18n" {
     export const loadPromise: Promise<void>;
     export function setLocale(locale: string): void;
     export const translationSiteURL: string;
+    export const _proxyContext: {
+        messages: any;
+        locale: string;
+        defaultMessages: any;
+    };
+
+    const Strings: {
+        languages,
+        Messages,
+        choosenLocale,
+        getDefaultLocale,
+        getLocaleInfo,
+        getLanguages,
+        getLocale,
+        loadPromise
+        setLocale
+        translationSiteURL
+        _proxyContext
+    };
+
+    export default Strings;
 }
 
 declare module "@discord/stores" {
@@ -177,7 +208,7 @@ declare module "@discord/stores" {
     };
 
     export const SettingsStore: {
-        get status(): "dnd" | "idle" | "online" | "offline";
+        status: "dnd" | "idle" | "online" | "offline";
     }
 
     export const Messages: {
@@ -214,12 +245,12 @@ declare module "@discord/stores" {
     };
     export const Status: {
         getStatus(userId: string): void | "online" | "dnd" | "idle";
-        getState(): {clientStatuses: any};
+        getState(): { clientStatuses: any };
     };
     export type UserProfileConnection = {
         type: string;
         id: string;
-        name: string; 
+        name: string;
         verified: boolean;
 
     };
@@ -230,7 +261,7 @@ declare module "@discord/stores" {
         isFetching: (userId: string) => boolean;
     };
 
-    export const Memebers: {
+    export const Members: {
         getMember: (guildId: string, userId: string) => any;
     };
 
@@ -254,7 +285,7 @@ declare module "@discord/stores" {
     };
 
     export const TypingUsers: {
-        isTyping: (channelId: string, userId: string) => boolean;  
+        isTyping: (channelId: string, userId: string) => boolean;
     };
 }
 
@@ -283,7 +314,7 @@ declare module "@discord/connections" {
         map,
         isSupported,
         filter
-    };  
+    };
 
     export default Connections;
 }
@@ -297,28 +328,28 @@ declare module "@discord/actions" {
 declare module "@discord/contextmenu" {
     export function openContextMenu(event: MouseEvent, menu: () => React.ReactElement, options?: object): void;
     export function closeContextMenu(): void;
-    export function MenuItem({label, action, id}: {label: string, action: () => any, id: string}): React.ReactElement;
-    export function MenuGroup({children}: {children: any}): React.ReactElement;
-    export default function ContextMenu({children, navId, onClose}: {children: any, navId: string, onClose: Function}): React.ReactElement;
+    export function MenuItem({ label, action, id }: { label: string, action: () => any, id: string }): React.ReactElement;
+    export function MenuGroup({ children }: { children: any }): React.ReactElement;
+    export function Menu({ children, navId, onClose }: { children: any, navId: string, onClose: Function }): React.ReactElement;
 }
 
 declare module "@discord/forms" {
     export function FormDivider(): any;
     export function FormItem(): any;
     export function FormNotice(): any;
-    export const FormNoticeTypes: {PRIMARY: string, DANGER: string, WARNING: string, SUCCESS: string, BRAND: string, CUSTOM: string};
-    export const FormNoticeImagePositions: {LEFT: string, RIGHT: string};
+    export const FormNoticeTypes: { PRIMARY: string, DANGER: string, WARNING: string, SUCCESS: string, BRAND: string, CUSTOM: string };
+    export const FormNoticeImagePositions: { LEFT: string, RIGHT: string };
     export function FormSection(): any;
     export function FormText(): any;
-    export const FormTextTypes: {DEFAULT: string, INPUT_PLACEHOLDER: string, DESCRIPTION: string, LABEL_BOLD: string, LABEL_SELECTED: string, LABEL_DESCRIPTOR: string};
+    export const FormTextTypes: { DEFAULT: string, INPUT_PLACEHOLDER: string, DESCRIPTION: string, LABEL_BOLD: string, LABEL_SELECTED: string, LABEL_DESCRIPTOR: string };
     export function FormTitle(): any;
-    export const FormTitleTags: {H1: string, H2: string, H3: string, H4: string, H5: string, LABEL: string}
+    export const FormTitleTags: { H1: string, H2: string, H3: string, H4: string, H5: string, LABEL: string }
 }
 
 declare module "@discord/scrollbars" {
-    export function ScrollerAuto(options: {className: string, children: any}): any;
-    export function ScrollerThin(options: {className: string, children: any}): any;
-    export default function Scroller(options: {className: string, children: any}): any;
+    export function ScrollerAuto(options: { className: string, children: any }): any;
+    export function ScrollerThin(options: { className: string, children: any }): any;
+    export default function Scroller(options: { className: string, children: any }): any;
 }
 
 declare module "@discord/native" {
@@ -327,6 +358,7 @@ declare module "@discord/native" {
 
 declare module "@discord/flux" {
     export class Store {
+        _initialized: boolean;
         constructor(dispatcher: any, events: any)
 
         emitChange(): void;
@@ -334,31 +366,31 @@ declare module "@discord/flux" {
         removeChangeListener(): boolean;
     }
 
-    export function useStateFromStores(stores: Array<Store>, collector: () => any): any;
+    export function useStateFromStores(stores: Array<Store>, collector: () => any, idk?: null, isEqual?: (previousState: any, partialState: any) => boolean): any;
     export function connectStores(stores: Array<Store>, collector: (props: any) => any): (props: any) => ReactElement;
 }
 
 declare module "@discord/modal" {
-    export const ModalSize: {SMALL: "small", MEDIUM: "medium", LARGE: "large", DYNAMIC: "dynamic"};
-    
-    type ModalProps = {transitionState: 2 | 3, onClose: () => void};
+    export const ModalSize: { SMALL: "small", MEDIUM: "medium", LARGE: "large", DYNAMIC: "dynamic" };
+
+    type ModalProps = { transitionState: 2 | 3, onClose: () => void };
     export function openModal(component: (props: ModalProps) => ReactElement): string;
-    
+
     interface ModalRootProps extends ModalProps {
         children: ReactElement
     }
     export function ModalRoot(props: ModalRootProps): ReactElement;
-    
-    type ModalFooterProps = {children: ReactElement, className?: string}
+
+    type ModalFooterProps = { children: ReactElement, className?: string }
     export function ModalFooter(props: ModalFooterProps): ReactElement;
 
-    type ModalHeaderProps = {children: ReactElement, className?: string};
+    type ModalHeaderProps = { children: ReactElement, className?: string };
     export function ModalHeader(props: ModalHeaderProps): ReactElement;
 
-    type ModalCloseButtonProps = {focusProps: any, onClick: (event: any) => void, className?: string, hideOnFullscreen?: boolean};
+    type ModalCloseButtonProps = { focusProps: any, onClick: (event: any) => void, className?: string, hideOnFullscreen?: boolean };
     export function ModalCloseButton(props: ModalCloseButtonProps): ReactElement;
 
-    type ModalContentProps = {children: ReactElement, className?: string, scrollerRef: (element: Element) => void};
+    type ModalContentProps = { children: ReactElement, className?: string, scrollerRef: (element: Element) => void };
     export function ModalContent(props: ModalContentProps): ReactElement;
 }
 
@@ -394,14 +426,20 @@ declare module "@discord/classes" {
         month: number;
     }
 
-    const Classes: {Message, User, Channel, Timestamp};
+    const Classes: { Message, User, Channel, Timestamp };
 
     export default Classes;
 }
 
 declare module "@discord/sanitize" {
-    export function decode(e,t?: any, n?: any, o?: any): any;
-    export function encode(e,t?: any, n?: any, s?: any): any;
-    export function parse(e,t?: any, n?: any, o?: any): any;
-    export function stringify(e,t?: any, n?: any, s?: any): any;
+    export function decode(e, t?: any, n?: any, o?: any): any;
+    export function encode(e, t?: any, n?: any, s?: any): any;
+    export function parse(e, t?: any, n?: any, o?: any): any;
+    export function stringify(e, t?: any, n?: any, s?: any): any;
+}
+
+declare module "@discord/icons" {
+    // const Directions: {};
+    export function Caret(props: { direction: string }): ReactElement;
+    // Caret.Directions = Directions;
 }

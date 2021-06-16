@@ -1,6 +1,12 @@
 {
     "compilerOptions": {
         "jsx": "react",
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "target": "ES6",
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "paths": {
+            "common": ["./common/"]
+        }
     }
 }

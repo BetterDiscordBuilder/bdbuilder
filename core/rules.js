@@ -38,11 +38,11 @@ export default function rules() {
                 "coffee-loader"
             ]// cool not gonna test it have fun square
         },
-        {
-            test: /\.json$/i,
-            exclude: /node_modules/,
-            type: "javascript/auto",
-            use: json
-        } // Thanks square for your help!
+        // {
+        //     test: /\.json$/i,
+        //     exclude: /node_modules/,
+        //     type: "javascript/auto",
+        //     use: json
+        // } // Thanks square for your help!
     ];
 };

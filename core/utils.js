@@ -50,6 +50,10 @@ export function resolveModule(mod) {
 	return path.resolve(path.join(__dirname, "..", "node_modules", mod));
 };
 
+export function resolveRawGithub(pluginName, path) {
+    return `https://raw.githubusercontent.com/${process.env.GITHUB_NAME}/${process.env.GITHUB_REPO}/${process.env.GITHUB_BRANCH}/${pluginName}/${path}`;
+};
+
 export function nanoseconds() {
 	const hrTime = process.hrtime();
 	return hrTime[0] * 1000000000 + hrTime[1];
@@ -100,6 +104,7 @@ const Utils = {
     shouldWatch,
     setBuiltConfig,
     getBuildConfig,
+    resolveRawGithub,
     startTime: nanoseconds(),
     get argv() {return argv;}
 };

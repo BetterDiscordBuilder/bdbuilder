@@ -1,5 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es6"
-    }
+        "baseUrl": ".",
+        "target": "es6",
+        "module": "es2020",
+        "checkJs": true,
+        "paths": {
+            "common": ["./common"],
+            "typings": []
+        },
+        "typeRoots": [
+            "./typings/discord.d.ts"
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }

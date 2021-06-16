@@ -1,0 +1,4 @@
+{
+    "god.tsconfig": "./tsconfig.json",
+    "typescript.preferences.quoteStyle": "single"
+}

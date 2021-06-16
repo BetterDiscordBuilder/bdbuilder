@@ -14,6 +14,7 @@ import plugins from "./plugins.js";
 import rules from "./rules.js";
 import resolve from "./resolve.js";
 import {Meta, Readme} from "./classes";
+import ExternalModules from "./modules";
 
 console.log("Starting Compilation.");
 
@@ -32,9 +33,7 @@ const pluginConfig = Utils.getConfig();
 
 if (~Object.keys(argv).indexOf("plugin")) {
     const buildConfig = {
-        mode: argv.release || nullish(Utils.getConfig("build.production"), false) 
-            ? "production" 
-            : "development",
+        mode: "production",
         target: "node",
         entry: Utils.getPath(),
         output: {
@@ -42,6 +41,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
             libraryTarget: "commonjs2",
             filename: Utils.getConfig("main") || "index.js",
             path: CONSTANTS.TEMP_PATH,
+            enabledChunkLoadingTypes: ['jsonp', 'require']
         },
         watch: Utils.shouldWatch(),
         watchOptions: {
@@ -73,30 +73,28 @@ if (~Object.keys(argv).indexOf("plugin")) {
             const info = stats.toJson();
             for (const warning of info.warnings) console.log(warning.message + "\n");
         }
-    
-        if (err || stats.hasErrors()) return console.log(`Failed to build after ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}ms.`);
-    
+
+        if (err || stats.hasErrors()) return console.log(`Failed to build after ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
+
         fs.ensureDirSync(CONSTANTS.TEMP_PATH);
         const meta = new Meta(config);
         const templatePlugin = fs.readFileSync(path.join(CONSTANTS.TEMPLATES_DIR, "plugin.template.js"), "utf8");
         const bdFilename = `${config.info.name.replace(/ /g, "")}.plugin.js`;
         const tempFile = path.join(CONSTANTS.TEMP_PATH, config.main || "index.js");
-    
+
         const outputPath = path.join(CONSTANTS.BUILDS_PATH, bdFilename);
-    
+
         try {
             fs.unlinkSync(outputPath);
         } catch (error) {
             console.log("Failed to remove old file:\n", error);
         }
         fs.ensureFileSync(tempFile);
-        let builtCode = fs.readFileSync(tempFile, "utf-8").replace(
-            '"use strict";',
-            `"use strict";
-            let __plugin_styles__ = "";
-            let __style_element__ = null;\n`
-        );
-    
+        let builtCode = fs.readFileSync(tempFile, "utf-8");
+        const split = builtCode.split("\n");
+        split.splice(2, 0, ExternalModules.join("\n"));
+        builtCode = split.join("\n");
+
         if (pluginConfig.build.zlibrary) {
             builtCode = `${meta}\n${Utils.format(templatePlugin, {pluginConfig: JSON.stringify(pluginConfig, null, "\t"), builtCode})}`;
         } else {
@@ -104,35 +102,35 @@ if (~Object.keys(argv).indexOf("plugin")) {
                 "module.exports.LibraryPluginHack = __webpack_exports__",
                 "module.exports = __webpack_exports__.default ?? __webpack_exports__"
             );
-    
+
             builtCode = `${meta}\n${builtCode}`;
         }
-    
+
         builtCode = beautify(builtCode, {indent_with_tabs: true}).replace(/\n{2,}/g, "\n");
-    
+
         fs.writeFileSync(outputPath, builtCode);
-    
-        console.log(`Built in ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}ms.`);
+
+        console.log(`Built in ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
         if (argv.release) {
             try {
                 const config = getConfig("build.release");
                 const info = getConfig("info");
                 if (typeof config !== "object") throw new Error("Invalid release configuration");
-    
+
                 const releaseDir = nullish(config.public ? path.join(process.env.RELEASE_FOLDER, info.name) : void 0, path.join(CONSTANTS.RELEASE_DIR, info.name));
                 if (fs.existsSync(releaseDir)) fs.emptyDirSync(releaseDir);
                 else fs.mkdirSync(releaseDir);
-    
+
                 if (nullish(config.readme, true)) {
                     fs.writeFileSync(path.join(releaseDir, "README.md"), new Readme(pluginConfig).toString(), "utf8");
                 }
-    
+
                 if (nullish(config.source, true)) {
                     fs.copy(Utils.getPath(), path.join(releaseDir, "src"), {recursive: true, filter: src => src.indexOf("node_modules") < 0});
                 }
-                
+
                 fs.writeFileSync(path.join(releaseDir, bdFilename), builtCode);
-            } catch(error) {
+            } catch (error) {
                 console.error(`Release build failed!\n`, error);
             }
         } else if (pluginConfig.build.copy) {

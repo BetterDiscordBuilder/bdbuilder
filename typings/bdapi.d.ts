@@ -301,3 +301,7 @@ declare namespace BdApi {
         instead: ({returnValue: any, methodArguments: IArguments}) => any;
     }): () => void;
 }
+
+declare module "betterdiscord/api" {
+    export default BdApi;
+}
