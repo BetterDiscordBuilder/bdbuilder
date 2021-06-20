@@ -3,6 +3,41 @@ export const DiscordCommands: {
     BUILT_IN_SECTIONS: CommandSection[];
 } = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
 
+const DiscordCommandTypes: {
+    ApplicationCommandOptionType: {
+        BOOLEAN: 5;
+        CHANNEL: 7;
+        INTEGER: 4;
+        MENTIONABLE: 9;
+        ROLE: 8;
+        STRING: 3;
+        SUB_COMMAND: 1;
+        SUB_COMMAND_GROUP: 2;
+        USER: 6;
+    };
+    ApplicationCommandSectionType: {
+        BUILT_IN: 0;
+        DM: 2;
+        GUILD: 1;
+    };
+    ApplicationCommandType: {
+        BOT: 3;
+        BUILT_IN: 0;
+        BUILT_IN_INTEGRATION: 2;
+        BUILT_IN_TEXT: 1
+        PLACEHOLDER: 4;
+    };
+    ApplicationCommandPermissionType: {
+        ROLE: 1;
+        USER: 2;
+    }
+} = BdApi.findModuleByProps("ApplicationCommandType");
+
+/* Aliases */
+export const Types = DiscordCommandTypes.ApplicationCommandType;
+export const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+export const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+
 export type CommandSection = {
     icon: string;
     id: string;
@@ -37,12 +72,13 @@ if (!DiscordCommands.BUILT_IN_SECTIONS.some(e => e.id === "betterdiscord")) {
 export function registerCommand(caller: string, options: Command) {
     const cmd = Object.assign({}, options, {
         __registerId: caller,
-        applicationId: "betterdiscord"
+        applicationId: "betterdiscord",
+        type: Types.BOT
     });
     DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
 
     return () => {
-        const index = DiscordCommands.BUILT_IN_COMMANDS.findIndex(c => c === cmd);
+        const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
         if (index < 0) return false;
         DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
     };

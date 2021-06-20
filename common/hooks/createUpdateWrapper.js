@@ -1,11 +1,12 @@
-const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
     const [value, setValue] = React.useState(props[valueProp]);
 
-    return <Component 
+    return <Component
         {...{
             ...props,
             [valueProp]: value,
-            [changeProp]: value => {
+            [changeProp]: (...args) => {
+                const value = args[valueIndex];
                 if (typeof props[changeProp] === "function") props[changeProp](value);
                 setValue(value);
             }

@@ -30,7 +30,7 @@
         "Guilds": "BdApi.findModuleByProps('getGuild')",
         "SelectedGuilds": "BdApi.findModuleByProps('getGuildId', 'getLastSelectedGuildId')",
         "SelectedChannels": "BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId')",
-        "Info": "BdApi.findModuleByProps('getCurrentUser')",
+        "Info": "BdApi.findModuleByProps('getSessionId')",
         "Status": "BdApi.findModuleByProps('getStatus')",
         "Users": "BdApi.findModuleByProps('getUser')",
         "SettingsStore": "BdApi.findModuleByProps('afkTimeout', 'status')",

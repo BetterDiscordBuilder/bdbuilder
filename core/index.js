@@ -37,11 +37,11 @@ if (~Object.keys(argv).indexOf("plugin")) {
         target: "node",
         entry: Utils.getPath(),
         output: {
+            clean: true,
             library: "LibraryPluginHack",
             libraryTarget: "commonjs2",
             filename: Utils.getConfig("main") || "index.js",
-            path: CONSTANTS.TEMP_PATH,
-            enabledChunkLoadingTypes: ['jsonp', 'require']
+            path: CONSTANTS.TEMP_PATH
         },
         watch: Utils.shouldWatch(),
         watchOptions: {

@@ -1,6 +1,6 @@
 export type BotMessage = {
-    state: "SENT" | "SENDING",
-    author: {
+    state?: "SENT" | "SENDING",
+    author?: {
         id: string;
         avatar: string;
         bot: boolean;
