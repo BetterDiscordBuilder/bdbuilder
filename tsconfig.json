@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": true,
+        "target": "ES6",
+        "allowJs": true,
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "paths": {
+            "common": ["./common/"]
+        }
+    }
+}

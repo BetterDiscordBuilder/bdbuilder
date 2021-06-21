@@ -1,0 +1,88 @@
+.category {
+    &.compact {
+        position: inherit;
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px;
+            padding-left: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: .9rem;
+
+            .caret {
+                float: right;
+                display: inline-flex;
+                color: var(--interactive-normal);
+            }
+
+            .stroke {
+                background-color: var(--background-modifier-accent);
+                height: 2px;
+                flex: 1;
+                margin: 0 5px 0 10px;
+            }
+
+            .label {
+                color: var(--interactive-normal);
+            }
+        }
+
+        .content {
+            padding-left: 20px;
+            width: calc(100% - 40px);
+        }
+    }
+
+    &.default {
+        background: rgba(32, 34, 37, .3);
+        border: 1px solid #202225;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 3px;
+        --color: var(--interactive-normal);
+
+        &:hover {
+            --color: var(--interactive-hover);
+        }
+
+        .header {
+            padding-right: 5px;
+            padding: 10px 15px;
+            padding-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .stroke {
+                display: none;
+            }
+
+            .divider {
+                position: relative;
+            }
+
+            .label {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #fff;
+                text-transform: uppercase;
+            }
+
+            .caret {
+                color: var(--color);
+                transition: color .3s;
+            }
+        }
+
+        &.opened .content {
+            padding: 8px;
+        }
+
+        &.opened .header {
+            background: rgba(32, 34, 37, .6);
+        }
+    }
+}

@@ -9,8 +9,9 @@
 		]
 	},
 	"build": {
-		"copy": "%AppData%/BetterDiscord/plugins",
-		"flow": true,
+		"copy": true,
+		"zlibrary": true,
+		"production": false,
 		"alias": {
 			
 		}

@@ -1,12 +1,14 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-        "target": "es6"
+        "baseUrl": "./",
+        "target": "es6",
+        "module": "commonjs",
+        "checkJs": true,
+        "paths": {
+            "common/*": ["common/*"]
+        }
     },
-    "typeAcquisition": {
-        "enable": true,
-        "include": [
-            "./typings/*"
-        ]
-    }
+    "exclude": [
+        "node_modules"
+    ]
 }
