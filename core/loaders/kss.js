@@ -17,6 +17,6 @@ export default function kss(code) {
         }
         code = code.replace(parent, `:global(.${module[keys[0]].replace(SPACE_REGEX, ".")})`);
     }
-    
+
     callback(null, code);
 }

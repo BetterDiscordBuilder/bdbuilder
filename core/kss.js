@@ -1,4 +1,4 @@
-assign {
+export default `assign {
     resolve: function resolve(selectors, selector = true) {
         const keys = selectors.split(" ");
         const module = window.BdApi.findModule(e => keys.every(s => s.startsWith("-") ? !e[s.slice(1)] : typeof e[s] == "string"));
@@ -16,4 +16,4 @@ assign {
             return clas;
         }, "").trimEnd();
     }
-}
+}`;

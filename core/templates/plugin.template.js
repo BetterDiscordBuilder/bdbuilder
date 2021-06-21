@@ -1,3 +1,4 @@
+export default `
 /*@cc_on
 @if (@_jscript)
     
@@ -39,12 +40,12 @@ module.exports = window.hasOwnProperty("ZeresPluginLibrary")
     : class {
         getName() {return config.info.name;}
         getAuthor() {return config.info.authors.map(a => a.name).join(", ");}
-        getDescription() {return `${config.info.description}. __**ZeresPluginLibrary was not found! This plugin will not work!**__`;}
+        getDescription() {return \`\${config.info.description}. __**ZeresPluginLibrary was not found! This plugin will not work!**__\`;}
         getVersion() {return config.info.version;}
         load() {
             BdApi.showConfirmationModal(
                 "Library plugin is needed", 
-                [`The library plugin needed for ${config.info.name} is missing. Please click Download to install it.`], 
+                [\`The library plugin needed for \${config.info.name} is missing. Please click Download to install it.\`], 
                 {
                     confirmText: "Download",
                     cancelText: "Cancel",
@@ -61,4 +62,4 @@ module.exports = window.hasOwnProperty("ZeresPluginLibrary")
         stop() {}
     };
 
-/*@end@*/
+/*@end@*/`;

@@ -15,6 +15,7 @@ import rules from "./rules.js";
 import resolve from "./resolve.js";
 import {Meta, Readme} from "./classes";
 import ExternalModules from "./modules";
+import ZLibraryTemplate from "./templates/plugin.template";
 
 console.log("Starting Compilation.");
 
@@ -78,7 +79,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
 
         fs.ensureDirSync(CONSTANTS.TEMP_PATH);
         const meta = new Meta(config);
-        const templatePlugin = fs.readFileSync(path.join(CONSTANTS.TEMPLATES_DIR, "plugin.template.js"), "utf8");
+        // const templatePlugin = fs.readFileSync(path.join(CONSTANTS.TEMPLATES_DIR, "plugin.template.js"), "utf8");
         const bdFilename = `${config.info.name.replace(/ /g, "")}.plugin.js`;
         const tempFile = path.join(CONSTANTS.TEMP_PATH, config.main || "index.js");
 
@@ -96,7 +97,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
         builtCode = split.join("\n");
 
         if (pluginConfig.build.zlibrary) {
-            builtCode = `${meta}\n${Utils.format(templatePlugin, {pluginConfig: JSON.stringify(pluginConfig, null, "\t"), builtCode})}`;
+            builtCode = `${meta}\n${Utils.format(ZLibraryTemplate, {pluginConfig: JSON.stringify(pluginConfig, null, "\t"), builtCode})}`;
         } else {
             builtCode = builtCode.replace(
                 "module.exports.LibraryPluginHack = __webpack_exports__",

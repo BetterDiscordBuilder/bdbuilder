@@ -1,7 +1,7 @@
 import {stylesheet, css, js, json, kss} from "./loaders";
 
 export default function rules() {
-    const cssLoader = css();
+    const cssLoader = css;
 
     return [
         {
@@ -14,7 +14,7 @@ export default function rules() {
         },
         {
             test: /\.styl$/i,
-            use: [stylesheet, cssLoader, kss, "stylus-loader",]
+            use: [stylesheet, cssLoader, kss, "stylus-loader"]
         },
         {
             test: /\.less$/i,
