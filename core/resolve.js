@@ -1,8 +1,8 @@
-import Utils, {getConfig, nullish} from "./utils.js";
+import Utils, {getAddonConfig, nullish} from "./utils.js";
 import path from "path";
 
 export default function resolve() {
-    const pluginAliases = nullish(getConfig("build.aliases"), {});
+    const pluginAliases = nullish(getAddonConfig("build.aliases"), {});
 
     const ret = {
         extensions: [
@@ -27,6 +27,6 @@ export default function resolve() {
             common: path.resolve(__dirname, "..", "common")
         })
     };
-    
+
     return ret;
 };

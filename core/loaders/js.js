@@ -1,7 +1,7 @@
-import Utils, {getConfig, nullish, resolveModule} from "../utils.js";
+import Utils, {getAddonConfig, nullish, resolveModule} from "../utils.js";
 
 export default function js() {
-    return Utils.argv.release || nullish(Utils.argv.production, getConfig("build.production"))
+    return Utils.isDevelopment
         ? {
             loader: resolveModule("babel-loader"),
             options: {

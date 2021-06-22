@@ -7,7 +7,6 @@ import {builtinModules} from "module";
 
 export default function externals() {
     const pluginPath = Utils.getPath();
-    const config = Utils.getConfig();
 
     return [
         {
@@ -33,7 +32,7 @@ export default function externals() {
             }
 
             // Check if it's in node_modules.
-            const config = Utils.getBuildConfig();
+            const config = Utils.getBuilderConfig();
             const nodeModulesPath = path.resolve(pluginPath, "node_modules");
             if (fs.existsSync(nodeModulesPath)) {
                 if (fs.existsSync(path.join(nodeModulesPath, request))) return callback();

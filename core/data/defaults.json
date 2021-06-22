@@ -1,0 +1,19 @@
+{
+    "build": {
+        "production": false,
+        "watch": true
+    },
+    "discord": {
+        "userId": "???",
+        "username": "???"
+    },
+    "github": {
+        "username": "???",
+        "branchName": "???",
+        "repo": "???"
+    },
+    "paths": {
+        "bdfolder": "???",
+        "release_folder": "???"
+    }
+}

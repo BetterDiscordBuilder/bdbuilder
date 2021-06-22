@@ -1,8 +1,8 @@
-declare namespace React {
-    export interface ReactElement {}
-    export interface ComponentClass {}
-    export type DispatchWithoutAction = () => void;
-}
+// declare namespace React {
+//     export interface ReactElement {}
+//     export interface ComponentClass {}
+//     export type DispatchWithoutAction = () => void;
+// }
 
 interface ReactComponent {
     component: any;
@@ -13,17 +13,17 @@ interface ReactComponent {
 
 
 declare module "@zlibrary/discord" {
-    export const APIModule: {get: (options, callback?: (data: any) => void) => Promise<any>};
-    
-    export const MessageStore: {getMessage: (channelId: string, messageId: string) => any};
+    export const APIModule: { get: (options, callback?: (data: any) => void) => Promise<any> };
+
+    export const MessageStore: { getMessage: (channelId: string, messageId: string) => any };
     export const DiscordConstants: {
-        Endpoints: {MESSAGES: (channelId: string) => string;};
+        Endpoints: { MESSAGES: (channelId: string) => string; };
     };
     export const Dispatcher: {
-        dirtyDispatch: (options: {type: string}) => void
+        dirtyDispatch: (options: { type: string }) => void
     }
     export const ModalActions: {
-        openModal: (props: {onClose: () => void, transitionState: "1" | "2" | "3"}) => any;
+        openModal: (props: { onClose: () => void, transitionState: "1" | "2" | "3" }) => any;
     }
 }
 
@@ -93,24 +93,24 @@ declare module "@zlibrary" {
         static saveSettings(pluginName: string, settings: object): void;
     }
 
-    type MenuItem = {label: string, action: (event: any) => void};
+    type MenuItem = { label: string, action: (event: any) => void };
     export class DCM {
         static buildMenuChildren(setup: Array<MenuItem>): any;
-        static buildMenuItem(options: MenuItem): any; 
+        static buildMenuItem(options: MenuItem): any;
     }
 
-    export class DiscordContextMenu extends DCM {}
+    export class DiscordContextMenu extends DCM { }
 
     type ToastOptions = {
-        type: "info" | "error" | "warning" | "success";
-        timeout: number;
+        type?: "info" | "error" | "warning" | "success";
+        timeout?: number;
     };
     export class Toasts {
-        static show(content: string, options: ToastOptions): void;
-        static success(content: string, options: ToastOptions): void;
-        static warning(content: string, options: ToastOptions): void;
-        static error(content: string, options: ToastOptions): void;
-        static info(content: string, options: ToastOptions): void;
+        static show(content: string, options?: ToastOptions): void;
+        static success(content: string, options?: ToastOptions): void;
+        static warning(content: string, options?: ToastOptions): void;
+        static error(content: string, options?: ToastOptions): void;
+        static info(content: string, options?: ToastOptions): void;
     }
 
     type ConfirmModalOptions = {

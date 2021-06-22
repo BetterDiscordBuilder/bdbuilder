@@ -5,7 +5,7 @@ import path from "path";
 import webpack from "webpack";
 import {js as beautify} from "js-beautify";
 import optimization from "./optimization.js";
-import Utils, {getConfig, nullish} from "./utils.js";
+import Utils, {getAddonConfig, nullish} from "./utils.js";
 import externals from "./externals.js";
 import {hideBin} from "yargs/helpers";
 import yargs from "yargs/yargs";
@@ -30,7 +30,7 @@ fs.ensureDirSync(path.join(__dirname, "..", "builds"));
 fs.ensureDirSync(path.join(__dirname, "..", "temp"));
 
 
-const pluginConfig = Utils.getConfig();
+const pluginConfig = Utils.getAddonConfig();
 
 if (~Object.keys(argv).indexOf("plugin")) {
     const buildConfig = {
@@ -41,10 +41,10 @@ if (~Object.keys(argv).indexOf("plugin")) {
             clean: true,
             library: "LibraryPluginHack",
             libraryTarget: "commonjs2",
-            filename: Utils.getConfig("main") || "index.js",
+            filename: Utils.getAddonConfig("main") || "index.js",
             path: CONSTANTS.TEMP_PATH
         },
-        watch: Utils.shouldWatch(),
+        watch: Utils.shouldWatch,
         watchOptions: {
             followSymlinks: true,
         },
@@ -59,7 +59,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
     Utils.setBuiltConfig(buildConfig);
     webpack(buildConfig, (err, stats) => {
         // console.clear();
-        const {build, ...config} = Utils.getConfig();
+        const {build, ...config} = Utils.getAddonConfig();
 
         if (err) {
             console.error((err.stack || err) + "\n");
@@ -114,8 +114,8 @@ if (~Object.keys(argv).indexOf("plugin")) {
         console.log(`Built in ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
         if (argv.release) {
             try {
-                const config = getConfig("build.release");
-                const info = getConfig("info");
+                const config = getAddonConfig("build.release");
+                const info = getAddonConfig("info");
                 if (typeof config !== "object") throw new Error("Invalid release configuration");
 
                 const releaseDir = nullish(config.public ? path.join(process.env.RELEASE_FOLDER, info.name) : void 0, path.join(CONSTANTS.RELEASE_DIR, info.name));

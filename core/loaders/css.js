@@ -1,4 +1,4 @@
-import {getConfig, nullish} from "../utils";
+import {getAddonConfig, nullish} from "../utils";
 
 export default function css() {
     return {
@@ -6,7 +6,7 @@ export default function css() {
         options: {
             importLoaders: true,
             modules: {
-                localIdentName: nullish(getConfig("info.name"), "").replace(/ /g, "") + "-[name]-[local]"
+                localIdentName: nullish(getAddonConfig("info.name"), "").replace(/ /g, "") + "-[name]-[local]"
             }
         }
     };
