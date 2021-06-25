@@ -5,7 +5,7 @@ import path from "path";
 import webpack from "webpack";
 import {js as beautify} from "js-beautify";
 import optimization from "./optimization.js";
-import Utils, {getAddonConfig, nullish} from "./utils.js";
+import Utils, {getAddonConfig, getBuilderConfig, nullish} from "./utils.js";
 import externals from "./externals.js";
 import {hideBin} from "yargs/helpers";
 import yargs from "yargs/yargs";
@@ -87,13 +87,17 @@ if (~Object.keys(argv).indexOf("plugin")) {
         const builderOutput = Utils.format(Utils.getBuilderConfig().build.folder, {
             plugin: escapedName
         });
+        const outputFolder = fs.existsSync(builderOutput) ? builderOutput : CONSTANTS.BUILDS_PATH;
+        const outputPath = path.join(outputFolder, bdFilename);
 
-        const outputPath = path.join(fs.existsSync(builderOutput) ? builderOutput : CONSTANTS.BUILDS_PATH, bdFilename);
-
-        try {
-            if (!argv.build) fs.unlinkSync(outputPath);
-        } catch (error) {
-            console.log("Failed to remove old file:\n", error);
+        if (argv.build) {
+            if (argv.readme || getBuilderConfig().build.readme) fs.writeFileSync(path.join(outputFolder, "README.md"), new Readme(pluginConfig).toString(), "utf8");
+        } else {
+            try {
+                fs.unlinkSync(outputPath);
+            } catch (error) {
+                console.log("Failed to remove old file:\n", error);
+            }
         }
 
         fs.ensureFileSync(tempFile);
