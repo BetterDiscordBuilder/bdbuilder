@@ -1,7 +1,8 @@
 {
     "build": {
         "production": false,
-        "watch": true
+        "watch": false,
+        "folder": ""
     },
     "discord": {
         "userId": "???",

@@ -80,16 +80,22 @@ if (~Object.keys(argv).indexOf("plugin")) {
         fs.ensureDirSync(CONSTANTS.TEMP_PATH);
         const meta = new Meta(config);
         // const templatePlugin = fs.readFileSync(path.join(CONSTANTS.TEMPLATES_DIR, "plugin.template.js"), "utf8");
-        const bdFilename = `${config.info.name.replace(/ /g, "")}.plugin.js`;
+        const escapedName = config.info.name.replace(/ /g, "");
+        const bdFilename = `${escapedName}.plugin.js`;
         const tempFile = path.join(CONSTANTS.TEMP_PATH, config.main || "index.js");
 
-        const outputPath = path.join(CONSTANTS.BUILDS_PATH, bdFilename);
+        const builderOutput = Utils.format(Utils.getBuilderConfig().build.folder, {
+            plugin: escapedName
+        });
+
+        const outputPath = path.join(fs.existsSync(builderOutput) ? builderOutput : CONSTANTS.BUILDS_PATH, bdFilename);
 
         try {
-            fs.unlinkSync(outputPath);
+            if (!argv.build) fs.unlinkSync(outputPath);
         } catch (error) {
             console.log("Failed to remove old file:\n", error);
         }
+
         fs.ensureFileSync(tempFile);
         let builtCode = fs.readFileSync(tempFile, "utf-8");
         const split = builtCode.split("\n");
