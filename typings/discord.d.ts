@@ -12,6 +12,7 @@ declare interface UserObject {
     avatarUrl: string;
     getAvatarURL: (type: "gif" | "webp" | "png") => string;
     createdAt: Date;
+    bannerURL: string;
 }
 
 declare interface GuildObject {
@@ -73,7 +74,7 @@ declare module "@discord/components" {
 
     const ButtonColors: { BLACK: string; BRAND: string; GREEN: string; GREY: string; LINK: string; PRIMARY: string; RED: string; TRANSPARENT: string; WHITE: string; YELLOW: string; }
 
-    export function Button(props: { children?: any, look?: string, size?: string, dropdownSize?: string, color?: string, onClick?: (event: React.MouseEvent) => any }): ReactElement;
+    export function Button(props: { className?: string; disabled?: boolean; children?: any, look?: string, size?: string, dropdownSize?: string, color?: string, onClick?: (event: React.MouseEvent) => any }): ReactElement;
 
     // @ts-ignore
     Button.Sizes = ButtonSizes;

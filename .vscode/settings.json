@@ -1,5 +1,6 @@
 {
     "god.tsconfig": "./tsconfig.json",
-    "typescript.preferences.quoteStyle": "double",
+    "typescript.preferences.quoteStyle": "single",
+    "javascript.preferences.quoteStyle": "double",
     "discord.enabled": true
 }

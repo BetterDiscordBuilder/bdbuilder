@@ -34,6 +34,7 @@
 		"stylus-loader": "^4.3.1",
 		"sucrase": "^3.18.1",
 		"webpack": "^5.11.1",
+		"lodash": "^4.17.21",
 		"yargs": "^16.2.0"
 	},
 	"preferGlobal": true,
@@ -41,9 +42,8 @@
 		"bdbuilder": "./dist/bdbuilder.min.js"
 	},
 	"scripts": {
-		"build": "node ./core/loader.js --plugin='./plugins/%npm_config_plugin%'",
-		"watch": "node ./core/loader.js --plugin='./plugins/%npm_config_plugin%' --watch",
-		"init": "node ./scripts/init.js"
+		"build": "webpack --progress --color",
+		"watch": "webpack --progress --color --watch"
 	},
 	"repository": {
 		"type": "git",

@@ -1,19 +1,9 @@
 import path from "path";
 import fs from "fs-extra";
 import defaultConfig from "./data/defaults.json";
+import _ from "lodash";
 
 let addonPath = "", argv = {}, builtConfig = {};
-
-export function deepAssign(obj1, obj2) {
-    for (const key of Object.keys(obj1)) {
-        if (Array.isArray(obj2[key]) && Array.isArray(obj1[key])) obj1[key].push(...obj2[key]);
-        else if (Array.isArray(obj2[key])) obj1[key] = obj2[key];
-        else if (typeof obj2[key] === "object" && typeof obj1[key] === "object") obj1[key] = deepAssign(obj1[key], obj2[key]);
-        else obj1[key] = obj2[key];
-    }
-
-    return obj1;
-};
 
 export function nullish(what, def) {
     return isNil(what) ? def : what;
@@ -105,20 +95,19 @@ export function shouldWatch() {
 export function readBuildConfig() {
     const configPath = path.join(process.cwd(), "bdbuilder.config.json");
     try {
-        return require(configPath);
+        return fs.readJSONSync(configPath);
     } catch (error) {
+        console.error(error);
         throw new Error("Could not resolve build config at " + configPath);
     }
 };
 
 export function getBuilderConfig() {
     const config = readBuildConfig();
-
-    return deepAssign(defaultConfig, config);
+    return _.merge(defaultConfig, config);
 };
 
 const Utils = {
-    deepAssign,
     resolveType,
     upperFirst,
     nullish,
