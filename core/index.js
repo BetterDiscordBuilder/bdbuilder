@@ -18,6 +18,7 @@ import ExternalModules from "./modules";
 import ZLibraryTemplate from "./templates/plugin.template";
 
 console.log("Starting Compilation.");
+console.log("Bruh.")
 
 const {argv} = yargs(hideBin(process.argv));
 Utils.init(argv.plugin || argv.theme, argv);
