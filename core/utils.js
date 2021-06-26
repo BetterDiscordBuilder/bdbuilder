@@ -151,7 +151,9 @@ const Utils = {
         return !this.isDevelopment;
     },
     get isDevelopment() {
-        return !getBuilderConfig().build.production || (argv.dev || argv.development || !argv.prod || !argv.production);
+        var r = !getBuilderConfig().build.production || (argv.dev || argv.development || !argv.prod || !argv.production);
+        console.log("IsDev:", r);
+        return r;
     }
 };
 
