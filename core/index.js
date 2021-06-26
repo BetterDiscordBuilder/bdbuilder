@@ -88,11 +88,13 @@ if (~Object.keys(argv).indexOf("plugin")) {
         }, "[", "]");
         const tempFile = path.join(CONSTANTS.TEMP_PATH, config.main || "index.js");
 
-        const builderOutput = Utils.format(builderConfig.output, {
+        const builderOutput = path.resolve(process.cwd(), Utils.format(builderConfig.build.output, {
             name: escapedName
-        }, "[", "]");
-        const outputFolder = fs.existsSync(builderOutput) ? builderOutput : CONSTANTS.BUILDS_PATH;
-        const outputPath = path.join(outputFolder, bdFilename);
+        }, "[", "]"));
+        if (!fs.existsSync(builderOutput)) fs.ensureDir(builderOutput);
+        const outputFolder = builderOutput;
+        console.log(outputFolder, builderOutput);
+        const outputPath = path.resolve(outputFolder, bdFilename);
 
         if (argv.build) {
             if (argv.readme || builderConfig.build.readme) fs.writeFileSync(path.join(outputFolder, "README.md"), new Readme(pluginConfig).toString(), "utf8");

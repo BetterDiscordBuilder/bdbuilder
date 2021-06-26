@@ -26,7 +26,6 @@ export default function externals() {
             }, {})
         },
         function ({context, request}, callback) {
-            console.log("Context:", context, CONSTANTS.ROOT_DIR);
             if (context === CONSTANTS.ROOT_DIR) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();

@@ -2,8 +2,10 @@ import path from "path";
 import fs from "fs-extra";
 import defaultConfig from "./data/defaults.json";
 import _ from "lodash";
+import {hideBin} from "yargs/helpers";
+import yargs from "yargs/yargs";
 
-let addonPath = "", argv = {}, builtConfig = {}, hasProp = {}.hasOwnProperty;
+let addonPath = "", argv = yargs(hideBin(process.argv)).argv, builtConfig = {}, hasProp = {}.hasOwnProperty;
 
 export function nullish(what, def) {
     return isNil(what) ? def : what;
@@ -64,7 +66,6 @@ export function nanoseconds() {
 
 export function init(addon, argvObj) {
     const cfg = getBuilderConfig();
-    console.log(cfg);
     addonPath = path.resolve(process.cwd(), formatString(cfg.build.entry, {name: addon}, "[", "]"));
     argv = argvObj;
 };
@@ -106,12 +107,12 @@ export function readBuildConfig() {
 };
 
 export function getBuilderConfig() {
-    const config = _.merge(defaultConfig, readBuildConfig());
-
+    const builderCfg = readBuildConfig();
+    let config = hasProp.call(builderCfg, "extends") ? builderCfg : _.merge(defaultConfig, builderCfg);
     if (hasProp.call(config, "extends")) {
         if (Array.isArray(config.extends)) {
             for (const cfg of config.extends) {
-                _.merge(config, fs.readJSONSync(path.resolve(process.cwd(), cfg)));
+                config = _.mergeWith(config, fs.readJSONSync(path.resolve(process.cwd(), cfg)));
             }
         } else {
             throw new Error("config.extends must be an array. Received " + typeof config.extends);
