@@ -78,7 +78,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
             for (const warning of info.warnings) Logger.warn(warning.message + "\n");
         }
 
-        if (err || stats.hasErrors()) return Logger.error(`Failed to build after ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
+        if (err || stats.hasErrors()) throw new Error(`Failed to build after ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
 
         fs.ensureDirSync(CONSTANTS.TEMP_PATH);
         const meta = new Meta(config);
