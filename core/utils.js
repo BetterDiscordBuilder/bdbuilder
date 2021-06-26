@@ -62,7 +62,7 @@ export function nanoseconds() {
 };
 
 export function init(addon, argvObj) {
-    addonPath = path.resolve("hello", "..", addon);
+    addonPath = path.resolve("..", addon, "src");
     argv = argvObj;
 };
 
