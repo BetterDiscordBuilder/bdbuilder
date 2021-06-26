@@ -151,6 +151,7 @@ const Utils = {
         return !this.isDevelopment;
     },
     get isDevelopment() {
+        console.log("ConfigProduction:", getBuilderConfig().build.production)
         var r = !getBuilderConfig().build.production || (argv.dev || argv.development || !argv.prod || !argv.production);
         console.log("IsDev:", r);
         return r;
