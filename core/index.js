@@ -25,10 +25,10 @@ Utils.init(argv.plugin || argv.theme, argv);
 config();
 
 /* Ensure Directories */
-fs.ensureDirSync(path.join(__dirname, "..", "releases"));
-fs.ensureDirSync(path.join(__dirname, "..", "plugins"));
-fs.ensureDirSync(path.join(__dirname, "..", "builds"));
-fs.ensureDirSync(path.join(__dirname, "..", "temp"));
+// fs.ensureDirSync(path.join(__dirname, "..", "releases"));
+// fs.ensureDirSync(path.join(__dirname, "..", "plugins"));
+// fs.ensureDirSync(path.join(__dirname, "..", "builds"));
+// fs.ensureDirSync(path.join(__dirname, "..", "temp"));
 
 
 const pluginConfig = Utils.getAddonConfig();

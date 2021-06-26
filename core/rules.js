@@ -1,4 +1,5 @@
 import {stylesheet, css, js, json, kss} from "./loaders";
+import {resolveModule} from "./utils";
 
 export default function rules() {
     const cssLoader = css;
@@ -10,15 +11,15 @@ export default function rules() {
         },
         {
             test: /\.s[ac]ss$/i,
-            use: [stylesheet, cssLoader, kss, "sass-loader"]
+            use: [stylesheet, cssLoader, kss, resolveModule("sass-loader")]
         },
         {
             test: /\.styl$/i,
-            use: [stylesheet, cssLoader, kss, "stylus-loader"]
+            use: [stylesheet, cssLoader, kss, resolveModule("stylus-loader")]
         },
         {
             test: /\.less$/i,
-            use: [stylesheet, cssLoader, kss, "less-loader"]
+            use: [stylesheet, cssLoader, kss, resolveModule("less-loader")]
         },
         {
             test: /\.m?(j|t)sx?$/i,
@@ -28,14 +29,14 @@ export default function rules() {
         {
             test: /\.html$/i,
             exclude: /node_modules/,
-            use: ["raw-loader"]
+            use: [resolveModule("raw-loader")]
         },
         {
             test: /\.coffee?$/i,
             exclude: /node_modules/,
             use: [
                 js(),
-                "coffee-loader"
+                resolveModule("coffee-loader")
             ]// cool not gonna test it have fun square
         },
         // {
