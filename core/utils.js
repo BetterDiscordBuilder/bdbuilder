@@ -98,7 +98,7 @@ export function shouldWatch() {
 
 export function readBuildConfig() {
     const configPath = path.resolve(process.cwd(), argv.config ?? "bdbuilder.config.json");
-    console.log(configPath);
+    console.log(argv, configPath);
     try {
         return fs.readJSONSync(configPath);
     } catch (error) {
@@ -119,7 +119,7 @@ export function getBuilderConfig() {
         }
     }
 
-    return _.merge(defaultConfig, builderCfg);
+    return _.merge(defaultConfig, config);
 };
 
 const Utils = {
