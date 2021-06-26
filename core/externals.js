@@ -26,8 +26,10 @@ export default function externals() {
             }, {})
         },
         function ({context, request}, callback) {
-            console.log("ROOT_PATH:", Utils.getPath());
-            if (context === Utils.getPath()) {
+            const fullPath = path.join(context, request);
+            console.log("ROOT_PATH:", pluginPath);
+            console.log("IsFirstRun")
+            if (fullPath === pluginPath) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
             }
@@ -39,7 +41,6 @@ export default function externals() {
                 if (fs.existsSync(path.join(nodeModulesPath, request))) return callback();
             }
 
-            const fullPath = path.join(context, request);
             try {
                 if (fs.lstatSync(fullPath).isDirectory()) {
                     // It's a folder. Check for index.SOMETHING.
