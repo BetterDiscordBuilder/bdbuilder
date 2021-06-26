@@ -145,7 +145,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
             } catch (error) {
                 console.error(`Release build failed!\n`, error);
             }
-        } else if (pluginConfig.build.copy) {
+        } else if (pluginConfig.build.copy && !argv.build) {
             fs.ensureDirSync(process.env.BDFOLDER);
             fs.writeFileSync(
                 path.resolve(path.join(process.env.BDFOLDER, bdFilename)),
