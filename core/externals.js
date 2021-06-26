@@ -26,12 +26,11 @@ export default function externals() {
             }, {})
         },
         function ({context, request}, callback) {
-            const fullPath = path.join(context, request);
-            if (fullPath === pluginPath) {
+            if (context === pluginPath) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
             }
-            console.log("TEST_ABC:", fullPath, pluginPath);
+            console.log("TEST_ABC:", context, request, pluginPath);
             // Check if it's in node_modules.
             const config = Utils.getBuildConfig();
             const nodeModulesPath = path.resolve(pluginPath, "node_modules");
@@ -39,6 +38,7 @@ export default function externals() {
                 if (fs.existsSync(path.join(nodeModulesPath, request))) return callback();
             }
 
+            const fullPath = path.join(context, request);
             try {
                 if (fs.lstatSync(fullPath).isDirectory()) {
                     // It's a folder. Check for index.SOMETHING.
