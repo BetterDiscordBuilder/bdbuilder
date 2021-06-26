@@ -1,12 +1,12 @@
 import {ProvidePlugin, ProgressPlugin, SourceMapDevToolPlugin} from "webpack";
-
+import Utils from "./utils";
 
 const Plugins = [
     new ProvidePlugin({
         React: ["react"],
         ReactDOM: ["react-dom"]
     }),
-    new ProgressPlugin({
+    Utils.isDevelopment && new ProgressPlugin({
         activeModules: false,
         entries: true,
         modules: true,
@@ -16,6 +16,6 @@ const Plugins = [
         dependenciesCount: 10000,
         percentBy: null
     })
-];
+].filter(Boolean);
 
 export default Plugins;
