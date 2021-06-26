@@ -119,7 +119,9 @@ export function getBuilderConfig() {
         }
     }
 
-    return _.merge(defaultConfig, config);
+    var c = _.merge(defaultConfig, config);
+    console.log(c);
+    return c;
 };
 
 const Utils = {
