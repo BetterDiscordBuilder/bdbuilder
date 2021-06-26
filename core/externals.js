@@ -26,6 +26,7 @@ export default function externals() {
             }, {})
         },
         function ({context, request}, callback) {
+            console.log("ROOT_PATH:", Utils.getPath());
             if (context === Utils.getPath()) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
