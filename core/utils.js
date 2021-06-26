@@ -107,19 +107,18 @@ export function readBuildConfig() {
 };
 
 export function getBuilderConfig() {
-    const builderCfg = readBuildConfig();
-    let config = hasProp.call(builderCfg, "extends") ? builderCfg : _.merge(defaultConfig, builderCfg);
+    let config = readBuildConfig();
     if (hasProp.call(config, "extends")) {
         if (Array.isArray(config.extends)) {
             for (const cfg of config.extends) {
-                config = _.mergeWith(config, fs.readJSONSync(path.resolve(process.cwd(), cfg)));
+                config = _.merge(fs.readJSONSync(path.resolve(process.cwd(), cfg)), config);
             }
         } else {
             throw new Error("config.extends must be an array. Received " + typeof config.extends);
         }
     }
 
-    return config;
+    return _.merge(defaultConfig, builderCfg);
 };
 
 const Utils = {
