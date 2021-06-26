@@ -1,8 +1,8 @@
-import {getAddonConfig, nullish} from "../utils";
+import {getAddonConfig, nullish, resolveModule} from "../utils";
 
 export default function css() {
     return {
-        loader: "css-loader",
+        loader: resolveModule("css-loader"),
         options: {
             importLoaders: true,
             modules: {
