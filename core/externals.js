@@ -54,7 +54,6 @@ export default function externals() {
             try {
                 // Test if the file exists, ignore extension.
                 const files = fs.readdirSync(path.join(fullPath, ".."));
-                console.log("Checking files...", files);
                 if (files.some((file) => file.startsWith(path.basename(fullPath)))) {
                     // Continue without externalizing the import
                     return callback();
@@ -73,8 +72,6 @@ export default function externals() {
             }
 
             try {
-                console.log(require("util").inspect(config));
-                console.log("\n\nHERE:", Object.keys(config.resolve.alias), request, "\n\n");
                 if (Object.keys(config.resolve.alias).some(k => k.charAt(k.length - 1) !== "$" && request.startsWith(k))) {
                     return callback();
                 }

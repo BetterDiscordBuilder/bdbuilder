@@ -3,7 +3,7 @@ import fs from "fs-extra";
 import defaultConfig from "./data/defaults.json";
 import _ from "lodash";
 
-let addonPath = "", argv = {}, builtConfig = {};
+let addonPath = "", argv = {}, builtConfig = {}, hasProp = {}.hasOwnProperty;
 
 export function nullish(what, def) {
     return isNil(what) ? def : what;
@@ -37,7 +37,7 @@ export function upperFirst(string) {
 
 export function formatString(string, options, open = "{{", close = "}}") {
     for (const option in options) {
-        string = string.replace(new RegExp(`${open}${option}${close}`, "g"), options[option]);
+        string = string.replace(new RegExp(`\\${open}${option}\\${close}`, "g"), options[option]);
     }
 
     return string;
@@ -53,7 +53,8 @@ export function resolveModule(mod) {
 };
 
 export function resolveRawGithub(pluginName, path) {
-    return `https://raw.githubusercontent.com/${process.env.GITHUB_NAME}/${process.env.GITHUB_REPO}/${process.env.GITHUB_BRANCH}/${pluginName}/${path}`;
+    const {github} = getBuilderConfig();
+    return `https://raw.githubusercontent.com/${github.username}/${github.repoName}/${github.branchName}/${pluginName}/${path}`;
 };
 
 export function nanoseconds() {
@@ -62,8 +63,9 @@ export function nanoseconds() {
 };
 
 export function init(addon, argvObj) {
-    console.log(process.cwd(), addon);
-    addonPath = path.resolve(process.cwd(), addon, "src");
+    const cfg = getBuilderConfig();
+    console.log(cfg);
+    addonPath = path.resolve(process.cwd(), formatString(cfg.build.entry, {name: addon}, "[", "]"));
     argv = argvObj;
 };
 
@@ -94,7 +96,7 @@ export function shouldWatch() {
 };
 
 export function readBuildConfig() {
-    const configPath = path.join(process.cwd(), "bdbuilder.config.json");
+    const configPath = path.resolve(process.cwd(), argv.config ?? "bdbuilder.config.json");
     try {
         return fs.readJSONSync(configPath);
     } catch (error) {
@@ -104,8 +106,19 @@ export function readBuildConfig() {
 };
 
 export function getBuilderConfig() {
-    const config = readBuildConfig();
-    return _.merge(defaultConfig, config);
+    const config = _.merge(defaultConfig, readBuildConfig());
+
+    if (hasProp.call(config, "extends")) {
+        if (Array.isArray(config.extends)) {
+            for (const cfg of config.extends) {
+                _.merge(config, fs.readJSONSync(path.resolve(process.cwd(), cfg)));
+            }
+        } else {
+            throw new Error("config.extends must be an array. Received " + typeof config.extends);
+        }
+    }
+
+    return config;
 };
 
 const Utils = {
@@ -131,8 +144,11 @@ const Utils = {
     get shouldWatch() {
         return nullish(argv.watch, getBuilderConfig().build.watch);
     },
+    get isProduction() {
+        return !this.isDevelopment;
+    },
     get isDevelopment() {
-        return nullish(this.isRelease, nullish(argv.production, getAddonConfig("build.production")));
+        return !getBuilderConfig().build.production || (argv.dev || argv.development || !argv.prod || !argv.production);
     }
 };
 

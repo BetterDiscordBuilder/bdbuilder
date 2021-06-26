@@ -16,6 +16,7 @@ import resolve from "./resolve.js";
 import {Meta, Readme} from "./classes";
 import ExternalModules from "./modules";
 import ZLibraryTemplate from "./templates/plugin.template";
+import Logger from "./logger.js";
 
 console.log("Starting Compilation.");
 console.log("Bruh. Why,")
@@ -61,43 +62,45 @@ if (~Object.keys(argv).indexOf("plugin")) {
     webpack(buildConfig, (err, stats) => {
         // console.clear();
         const {build, ...config} = Utils.getAddonConfig();
+        const builderConfig = Utils.getBuilderConfig();
 
         if (err) {
-            console.error((err.stack || err) + "\n");
-            if (err.details) console.error(err.details + "\n");
+            Logger.error((err.stack || err) + "\n");
+            if (err.details) Logger.error(err.details + "\n");
             return;
         }
         if (stats.hasErrors()) {
             const info = stats.toJson();
-            for (const error of info.errors) console.log(error.message + "\n");
+            for (const error of info.errors) Logger.error(error.message + "\n");
         }
         if (stats.hasWarnings()) {
             const info = stats.toJson();
-            for (const warning of info.warnings) console.log(warning.message + "\n");
+            for (const warning of info.warnings) Logger.warn(warning.message + "\n");
         }
 
-        if (err || stats.hasErrors()) return console.log(`Failed to build after ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
+        if (err || stats.hasErrors()) return Logger.error(`Failed to build after ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
 
         fs.ensureDirSync(CONSTANTS.TEMP_PATH);
         const meta = new Meta(config);
-        // const templatePlugin = fs.readFileSync(path.join(CONSTANTS.TEMPLATES_DIR, "plugin.template.js"), "utf8");
         const escapedName = config.info.name.replace(/ /g, "");
-        const bdFilename = `${escapedName}.plugin.js`;
+        const bdFilename = Utils.format(builderConfig.build.filename, {
+            name: escapedName
+        }, "[", "]");
         const tempFile = path.join(CONSTANTS.TEMP_PATH, config.main || "index.js");
 
-        const builderOutput = Utils.format(Utils.getBuilderConfig().build.folder, {
-            plugin: escapedName
-        });
+        const builderOutput = Utils.format(builderConfig.output, {
+            name: escapedName
+        }, "[", "]");
         const outputFolder = fs.existsSync(builderOutput) ? builderOutput : CONSTANTS.BUILDS_PATH;
         const outputPath = path.join(outputFolder, bdFilename);
 
         if (argv.build) {
-            if (argv.readme || getBuilderConfig().build.readme) fs.writeFileSync(path.join(outputFolder, "README.md"), new Readme(pluginConfig).toString(), "utf8");
+            if (argv.readme || builderConfig.build.readme) fs.writeFileSync(path.join(outputFolder, "README.md"), new Readme(pluginConfig).toString(), "utf8");
         } else {
             try {
                 fs.unlinkSync(outputPath);
             } catch (error) {
-                console.log("Failed to remove old file:\n", error);
+                Logger.error("Failed to remove old file:\n", error);
             }
         }
 
@@ -122,7 +125,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
 
         fs.writeFileSync(outputPath, builtCode);
 
-        console.log(`Built in ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
+        Logger.log(`Built in ${Math.round((Utils.nanoseconds() - Utils.startTime) / 1000).toLocaleString()}s.`);
         if (argv.release) {
             try {
                 const config = getAddonConfig("build.release");
@@ -133,22 +136,22 @@ if (~Object.keys(argv).indexOf("plugin")) {
                 if (fs.existsSync(releaseDir)) fs.emptyDirSync(releaseDir);
                 else fs.mkdirSync(releaseDir);
 
-                if (nullish(config.readme, true)) {
+                if (config.readme ?? true) {
                     fs.writeFileSync(path.join(releaseDir, "README.md"), new Readme(pluginConfig).toString(), "utf8");
                 }
 
-                if (nullish(config.source, true)) {
+                if (config.source ?? true) {
                     fs.copy(Utils.getPath(), path.join(releaseDir, "src"), {recursive: true, filter: src => src.indexOf("node_modules") < 0});
                 }
 
                 fs.writeFileSync(path.join(releaseDir, bdFilename), builtCode);
             } catch (error) {
-                console.error(`Release build failed!\n`, error);
+                Logger.error(`Release build failed!\n`, error);
             }
-        } else if (pluginConfig.build.copy && !argv.build) {
-            fs.ensureDirSync(process.env.BDFOLDER);
+        } else if (builderConfig.build.install) {
+            fs.ensureDirSync(path.join(builderConfig.paths.bdfolder, "plugins"));
             fs.writeFileSync(
-                path.resolve(path.join(process.env.BDFOLDER, bdFilename)),
+                path.resolve(path.join(builderConfig.paths.bdfolder, "plugins", bdFilename)),
                 builtCode
             );
         }
@@ -157,7 +160,7 @@ if (~Object.keys(argv).indexOf("plugin")) {
             fs.emptyDirSync(CONSTANTS.TEMP_PATH);
             fs.rmdirSync(CONSTANTS.TEMP_PATH, {recursive: true});
         } catch (error) {
-            console.error("Failed to remove tmp path:", error);
+            Logger.error("Failed to clear tmp path:", error);
         }
     });
 } else {

@@ -1,8 +1,12 @@
 {
+    "basePath": "..",
     "build": {
         "production": false,
         "watch": false,
-        "folder": ""
+        "entry": "./plugins/[name]",
+        "output": "./builds",
+        "filename": "[name].plugin.js",
+        "debug": false
     },
     "discord": {
         "userId": "???",
