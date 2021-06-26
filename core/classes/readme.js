@@ -10,7 +10,7 @@ export const string = `
 {{contributors}}
 {{previews}}
 <span>Made with <img src="https://discord.com/assets/0483f2b648dcc986d01385062052ae1c.svg" width="15" /> by <a href="https://github.com/Kyza/bdbuilder">BDBuilder</a></span>
-`.trim(); 
+`.trim();
 
 export const contributor = `
 <td align="center">
@@ -41,12 +41,12 @@ export const previewsPage = `
 export default class Readme {
     constructor(config) {
         this.config = config;
-    } 
+    }
 
     get contributors() {
         const contributors = this.config.build.release.contributors;
-        if (!Array.isArray(contributors) || !previews.length) return "";
-        
+        if (!Array.isArray(contributors) || !contributors.length) return "";
+
         return Utils.format(contributorsTable, {
             contributors: contributors.map(e => Utils.format(contributor, e)).join("\n")
         }) + "<br/>";
