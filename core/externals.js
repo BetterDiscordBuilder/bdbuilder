@@ -26,7 +26,7 @@ export default function externals() {
             }, {})
         },
         function ({context, request}, callback) {
-            if (context === pluginPath) {
+            if (request === pluginPath || context === pluginPath || CONSTANTS.ROOT_DIR === context) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
             }
