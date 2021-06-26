@@ -56,7 +56,7 @@ export function resolveModule(mod) {
 
 export function resolveRawGithub(pluginName, path) {
     const {github} = getBuilderConfig();
-    return `https://raw.githubusercontent.com/${github.username}/${github.repoName}/${github.branchName}/${pluginName}/${path}`;
+    return `https://raw.githubusercontent.com/${github.username}/${github.repo}/${github.branch}/${pluginName}/${path}`;
 };
 
 export function nanoseconds() {
