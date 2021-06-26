@@ -27,13 +27,11 @@ export default function externals() {
         },
         function ({context, request}, callback) {
             const fullPath = path.join(context, request);
-            console.log("ROOT_PATH:", pluginPath);
-            console.log("IsFirstRun")
             if (fullPath === pluginPath) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
             }
-
+            console.log("TEST_ABC:", fullPath, pluginPath);
             // Check if it's in node_modules.
             const config = Utils.getBuildConfig();
             const nodeModulesPath = path.resolve(pluginPath, "node_modules");
