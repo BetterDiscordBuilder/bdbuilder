@@ -73,6 +73,7 @@ export default function externals() {
             }
 
             try {
+                console.log(require("util").inspect(config));
                 console.log("\n\nHERE:", Object.keys(config.resolve.alias), request, "\n\n");
                 if (Object.keys(config.resolve.alias).some(k => k.charAt(k.length - 1) !== "$" && request.startsWith(k))) {
                     return callback();
