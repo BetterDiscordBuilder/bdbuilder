@@ -26,6 +26,7 @@ export default function externals() {
             }, {})
         },
         function ({context, request}, callback) {
+            console.log("Context:", context);
             if (context === CONSTANTS.ROOT_DIR) {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
@@ -43,6 +44,7 @@ export default function externals() {
                 if (fs.lstatSync(fullPath).isDirectory()) {
                     // It's a folder. Check for index.SOMETHING.
                     const files = fs.readdirSync(fullPath);
+                    console.log("Files:");
                     if (files.some((file) => file.startsWith("index."))) {
                         // Continue without externalizing the import
                         return callback();
@@ -52,6 +54,7 @@ export default function externals() {
             try {
                 // Test if the file exists, ignore extension.
                 const files = fs.readdirSync(path.join(fullPath, ".."));
+                console.log("Checking files...", files);
                 if (files.some((file) => file.startsWith(path.basename(fullPath)))) {
                     // Continue without externalizing the import
                     return callback();
