@@ -33,7 +33,7 @@ export default function externals() {
             }
 
             // Check if it's in node_modules.
-            const config = Utils.getBuilderConfig();
+            const config = Utils.getBuildConfig();
             const nodeModulesPath = path.resolve(pluginPath, "node_modules");
             if (fs.existsSync(nodeModulesPath)) {
                 if (fs.existsSync(path.join(nodeModulesPath, request))) return callback();

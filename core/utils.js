@@ -120,6 +120,7 @@ const Utils = {
     init,
     getPath,
     setBuiltConfig,
+    getBuildConfig,
     getBuilderConfig: getBuilderConfig,
     resolveRawGithub,
     startTime: nanoseconds(),
