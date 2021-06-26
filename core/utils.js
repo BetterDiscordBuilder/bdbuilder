@@ -148,11 +148,11 @@ const Utils = {
         return nullish(argv.watch, getBuilderConfig().build.watch);
     },
     get isProduction() {
-        return !this.isDevelopment;
+        return getBuilderConfig().build.production;
     },
     get isDevelopment() {
         console.log("ConfigProduction:", getBuilderConfig().build.production)
-        var r = !getBuilderConfig().build.production || (argv.dev || argv.development || !argv.prod || !argv.production);
+        var r = getBuilderConfig().build.hasOwnProperty("production") ? !getBuilderConfig().build.production : null ?? (argv.dev || argv.development || !argv.prod || !argv.production);
         console.log("IsDev:", r);
         return r;
     }

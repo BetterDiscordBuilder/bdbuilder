@@ -6,7 +6,7 @@ const Plugins = [
         React: ["react"],
         ReactDOM: ["react-dom"]
     }),
-    Utils.isDevelopment && new ProgressPlugin({
+    !Utils.isProduction && new ProgressPlugin({
         activeModules: false,
         entries: true,
         modules: true,
