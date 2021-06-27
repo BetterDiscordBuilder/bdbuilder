@@ -19,7 +19,6 @@ import ZLibraryTemplate from "./templates/plugin.template";
 import Logger from "./logger.js";
 
 console.log("Starting Compilation.");
-console.log("Bruh. Why,")
 
 const {argv} = yargs(hideBin(process.argv));
 Utils.init(argv.plugin || argv.theme, argv);
@@ -93,7 +92,6 @@ if (~Object.keys(argv).indexOf("plugin")) {
         }, "[", "]"));
         if (!fs.existsSync(builderOutput)) fs.ensureDir(builderOutput);
         const outputFolder = builderOutput;
-        console.log(outputFolder, builderOutput);
         const outputPath = path.resolve(outputFolder, bdFilename);
 
         if (argv.build) {
