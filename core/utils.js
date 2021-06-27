@@ -120,7 +120,6 @@ export function getBuilderConfig() {
     }
 
     var c = _.merge(defaultConfig, config);
-    console.log(c);
     return c;
 };
 
@@ -148,13 +147,10 @@ const Utils = {
         return nullish(argv.watch, getBuilderConfig().build.watch);
     },
     get isProduction() {
-        return getBuilderConfig().build.production;
+        return !this.isDevelopment;
     },
     get isDevelopment() {
-        console.log("ConfigProduction:", getBuilderConfig().build.production)
-        var r = getBuilderConfig().build.hasOwnProperty("production") ? !getBuilderConfig().build.production : null ?? (argv.dev || argv.development || !argv.prod || !argv.production);
-        console.log("IsDev:", r);
-        return r;
+        return getBuilderConfig().build.hasOwnProperty("production") ? !getBuilderConfig().build.production : null ?? (argv.dev || argv.development || !argv.prod || !argv.production);
     }
 };
 
