@@ -19,11 +19,17 @@ declare module "@zlibrary/discord" {
     export const DiscordConstants: {
         Endpoints: { MESSAGES: (channelId: string) => string; };
     };
+    export const MessageActions: {
+        sendMessage: (channelId: string, options: {content?: string}) => Promise<any>;
+    };
     export const Dispatcher: {
         dirtyDispatch: (options: { type: string }) => void
-    }
+    };
     export const ModalActions: {
         openModal: (props: { onClose: () => void, transitionState: "1" | "2" | "3" }) => any;
+    };
+    export const ElectronModule: {
+        readClipboard(): string;
     }
 }
 
@@ -69,6 +75,7 @@ declare module "@zlibrary" {
         static getByDisplayName(displayName: string): void | any;
         static getByPrototypes(...prototypes: string[]): void | any;
         static getModule(filter: (m: any) => Boolean, first?: true): void | any;
+        static getModules(filter: (m: any) => Boolean, first?: true): void | any;
         static find(filter: (m: any) => Boolean): void | any;
         static findAll(filter: (m: any) => Boolean): void | any[];
         static findByUniqueProperties(props: string[], first?: false): any | any[];
@@ -122,6 +129,10 @@ declare module "@zlibrary" {
     };
     export class Modals {
         static showConfirmationModal(title: string, content: string, options?: ConfirmModalOptions): void
+    }
+
+    export class Popouts {
+        static showUserPopout(element: Element, user: UserObject, options?: any): void;
     }
 }
 

@@ -30,7 +30,6 @@ export default function externals() {
                 Utils.startTime = Utils.nanoseconds();
                 return callback();
             }
-            console.log("TEST_ABC:", context, request, pluginPath);
             // Check if it's in node_modules.
             const config = Utils.getBuildConfig();
             const nodeModulesPath = path.resolve(pluginPath, "node_modules");
@@ -43,7 +42,6 @@ export default function externals() {
                 if (fs.lstatSync(fullPath).isDirectory()) {
                     // It's a folder. Check for index.SOMETHING.
                     const files = fs.readdirSync(fullPath);
-                    console.log("Files:");
                     if (files.some((file) => file.startsWith("index."))) {
                         // Continue without externalizing the import
                         return callback();
