@@ -1,0 +1,114 @@
+<script>
+    import {onMount} from "svelte";
+    import Configs from "./json";
+    import HighlightJS from "highlight.js";
+    import "highlight.js/styles/atom-one-dark.css";
+    
+    onMount(() => {
+        for (const el of document.querySelectorAll("pre code")) {
+            const element = el.parentElement;
+            HighlightJS.highlightElement(el.parentElement);
+            element.setAttribute("data-lang", element.className.split(" ").shift().slice("language-".length));
+        }
+    })
+</script>
+
+# Getting started
+### Setup a Config
+
+First, you need to create a `bdbuilder.config.json`, this is the config for the builder. 
+You can tell the builder with config it should use by adding the `--config="./bdbuilder.dev.json"` or whatever you want.
+
+These are the config entries you need to fill out:
+
+{#each Configs as config}
+    ### {config.name}
+    <table>
+        <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        {#each Object.keys(config.items) as entry}
+            <tr>
+            <td>
+                <code>{config.name}.{entry}</code>
+            </td>
+            {#each Object.keys(config.items[entry]) as key}
+                <td>
+                    {config.items[entry][key]}
+                </td>
+            {/each} 
+            </tr>
+        {/each}
+    </table>
+{/each}
+
+# Example config scheme:
+```json
+{
+    "basePath": "..",
+    "build": {
+        "production": false,
+        "watch": false,
+        "entry": "./plugins/[name]",
+        "output": "./builds",
+        "filename": "[name].plugin.js",
+        "debug": false
+    },
+    "discord": {
+        "userId": "???",
+        "username": "???"
+    },
+    "github": {
+        "username": "???",
+        "branch": "???",
+        "repo": "???"
+    },
+    "paths": {
+        "bdfolder": "???",
+        "release_folder": "???"
+    }
+}
+```
+
+<style lang="scss" global>
+    tr, td, th {
+        border: 1px solid var(--background-modifier-active);
+    }
+
+    td, th {
+        padding: 8px 8px;
+    }
+
+    code {
+        line-height: 16px;
+        padding: 3px;
+        border-radius: 3px;
+        background: var(--background-modifier-hover);
+        font-family: consolas;
+    }
+
+    table {
+        margin-bottom: 30px;
+        border-collapse: collapse;
+    }
+
+    pre {
+        padding: 10px;
+        position: relative;
+    }
+
+    .hljs::before {
+        content: attr(data-lang);
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 5px;
+        text-transform: capitalize;
+        border-radius: 4px;
+        background: var(--background-alt);
+    }
+</style>

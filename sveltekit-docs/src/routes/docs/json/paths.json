@@ -1,0 +1,15 @@
+{
+    "name": "paths",
+    "items": {
+        "bdfolder": {
+            "value": "string",
+            "default": "???",
+            "description": "The path/to/betterdiscord folder. Usually it's in %AppData%/BetterDiscord"
+        },
+        "release_folder": {
+            "value": "string",
+            "default": "???",
+            "description": "[DEPRECATED] The path/to/your/github/repo/ folder."
+        }
+    }
+}

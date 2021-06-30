@@ -1,0 +1,15 @@
+{
+    "name": "discord",
+    "items": {
+        "userId": {
+            "value": "string",
+            "default": "???",
+            "description": "The addon author's discord id."
+        },
+        "username": {
+            "value": "string",
+            "default": "???",
+            "description": "The addon author's username in discord."
+        }
+    }
+}

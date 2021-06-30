@@ -1,0 +1,20 @@
+{
+    "name":" github",
+    "items": {
+        "username": {
+            "value": "string",
+            "default": "???",
+            "description": "The github repo owner's username."
+        },
+        "branch": {
+            "value": "string",
+            "default": "???",
+            "description": "The github repo branch name."
+        },
+        "repo": {
+            "value": "string",
+            "default": "???",
+            "description": "The github repo name."
+        }
+    }
+}

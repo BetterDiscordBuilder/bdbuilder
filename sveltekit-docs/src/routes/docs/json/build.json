@@ -1,0 +1,35 @@
+{
+    "name": "build",
+    "items": {
+        "production": {
+            "value": "boolean",
+            "default": false,
+            "description": "Enables the production output-mode for your bundled files."
+        },
+        "watch": {
+            "value": "boolean",
+            "default": false,
+            "description": "Enables the watcher for your files."
+        },
+        "entry": {
+            "value": "string",
+            "default": "./[name]",
+            "description": "Defines the build entry for the addon."
+        },
+        "output": {
+            "value": "string",
+            "default": "./builds",
+            "description": "Defines the output folder for the bundled file. eg `./builds/UserDetails.plugin.js`"
+        },
+        "filename": {
+            "value": "string",
+            "default": "[name].plugin.js",
+            "description": "Defines the output filename for the bundled file."
+        },
+        "debug": {
+            "value": "boolean",
+            "default": false,
+            "description": "Enables debug mode, so a file in `logs/06.29.21.log`"
+        }
+    }
+}
