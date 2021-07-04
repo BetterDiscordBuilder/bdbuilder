@@ -42,7 +42,8 @@
         "TypingUsers": "BdApi.findModuleByProps('isTyping')"
     },
     "@discord/actions": {
-        "ProfileActions": "BdApi.findModuleByProps('fetchProfile')"
+        "ProfileActions": "BdApi.findModuleByProps('fetchProfile')",
+        "GuildActions": "BdApi.findModuleByProps('requestMembersById')"
     },
     "@discord/i18n": "BdApi.findModuleByProps('getLocale')",
     "@discord/constants": "BdApi.findModuleByProps('API_HOST')",
