@@ -5,7 +5,10 @@ import _ from "lodash";
 import {hideBin} from "yargs/helpers";
 import yargs from "yargs/yargs";
 
-let addonPath = "", argv = yargs(hideBin(process.argv)).argv, builtConfig = {}, hasProp = {}.hasOwnProperty;
+let addonPath = "";
+let argv = yargs(hideBin(process.argv)).argv;
+let builtConfig = {};
+let hasProp = {}.hasOwnProperty;
 
 export function nullish(what, def) {
     return isNil(what) ? def : what;
@@ -39,7 +42,7 @@ export function upperFirst(string) {
 
 export function formatString(string, options, open = "{{", close = "}}") {
     for (const option in options) {
-        string = string.replace(new RegExp(`\\${open}${option}\\${close}`, "g"), options[option]);
+        string = string.replace(new RegExp(_.escape(`\\${open}${option}\\${close}`), "g"), options[option]);
     }
 
     return string;
@@ -149,7 +152,15 @@ const Utils = {
         return !this.isDevelopment;
     },
     get isDevelopment() {
-        return getBuilderConfig().build.hasOwnProperty("production") ? !getBuilderConfig().build.production : null ?? (argv.dev || argv.development || !argv.prod || !argv.production);
+        const config = getBuilderConfig();
+        if (!config?.build) {
+            console.warn("WARN: config.build wasn't found, assuming we are in dev env.");
+            return true; // Automatically assume we are in dev env.
+        }
+        if (argv.dev || argv.development) return true;
+        if (argv.prod || argv.production) return false;
+
+        return config.build.production === false;
     }
 };
 
