@@ -1,6 +1,8 @@
 import {stylesheet, css, js, json, kss} from "./loaders";
 import {resolveModule} from "./utils";
 
+const exclude = /node_modules\/(?!(?:[^\/]+?\/)?bdbuilder\/common)/;
+
 export default function rules() {
     const cssLoader = css;
 
@@ -23,17 +25,17 @@ export default function rules() {
         },
         {
             test: /\.m?(j|t)sx?$/i,
-            exclude: /node_modules/,
+            exclude,
             use: js(),
         },
         {
             test: /\.html$/i,
-            exclude: /node_modules/,
+            exclude,
             use: [resolveModule("raw-loader")]
         },
         {
             test: /\.coffee?$/i,
-            exclude: /node_modules/,
+            exclude,
             use: [
                 js(),
                 resolveModule("coffee-loader")
@@ -41,7 +43,7 @@ export default function rules() {
         },
         // {
         //     test: /\.json$/i,
-        //     exclude: /node_modules/,
+        //     exclude,
         //     type: "javascript/auto",
         //     use: json
         // } // Thanks square for your help!

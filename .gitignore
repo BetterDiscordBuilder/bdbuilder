@@ -5,6 +5,7 @@ pnpm-lock.yaml
 builds
 plugins
 releases/*
+dist/
 temp
 
 # Logs

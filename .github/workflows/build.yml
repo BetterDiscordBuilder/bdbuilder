@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - feature/*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,8 +13,9 @@ concurrency:
 
 jobs:
   build:
-    name: build
+    name: build and publish
     runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, 'bump package version') }}
 
     steps:
       - name: clean working directory
@@ -21,8 +23,6 @@ jobs:
 
       - name: checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: setup nodejs
         uses: actions/setup-node@v2
@@ -33,42 +33,31 @@ jobs:
         run: npm i
 
       - name: build core
-        run: npm run build
+        run: npm run build:no-spam
 
-      - name: stage build
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-artifact
-          path: ./dist
-          retention-days: 1
-
-  publish:
-    name: publish
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: restore repo
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
-
-      - name: apply build
-        uses: actions/download-artifact@v2
-        with:
-          name: build-artifact
-          path: ./dist
-
-      - name: commit
+      - name: bump package version (master)
+        if: ${{ 'refs/heads/master' == github.ref }}
         run: |
-          git config advice.addIgnoredFile false
-          git add -f --no-all ./**
           git config --local user.email "actions@github.com"
           git config --local user.name "BDBuilder"
-          git commit -m "build core" || true
+          npm version patch -m "bump package version to %s"
 
-      - name: push
-        uses: ad-m/github-push-action@master
+      - name: bump package version (pre-release)
+        if: ${{ 'refs/heads/master' != github.ref }}
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "BDBuilder"
+          npm version prerelease --preid preview -m "bump package version to %s"
+
+      - name: publish
+        id: publish
+        uses: JS-DevTools/npm-publish@v1
         with:
-          github_token: ${{ github.token }}
-          branch: ${{ github.ref }}
+          token: ${{ github.token }}
+          access: public
+          registry: https://npm.pkg.github.com
+          tag: latest
+
+      - name: push version change
+        if: steps.publish.outputs.type != 'none'
+        run: git push

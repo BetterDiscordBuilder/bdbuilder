@@ -10,3 +10,5 @@ npm i
 cd ../..
 bdbuilder --plugin="./plugins/TestPlugin" --copy="C:/Users/Username/AppData/Roaming/BetterDiscord/plugins" --watch --production
 ```
+
+<!-- ignore me -->
