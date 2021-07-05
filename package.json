@@ -1,6 +1,6 @@
 {
-  "name": "@inve1951/bdbuilder",
-  "version": "1.2.2",
+  "name": "@kyza/bdbuilder",
+  "version": "1.2.1",
   "description": "Enhanced plugins transpiler for BetterDiscord. Allows you to build plugin with multiple files at once.",
   "main": "./dist/bdbuilder.min.js",
   "dependencies": {
@@ -43,11 +43,12 @@
   },
   "scripts": {
     "build": "webpack --progress --color",
+    "build:no-spam": "webpack --color",
     "watch": "webpack --progress --color --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Inve1951/bdbuilder.git"
+    "url": "git://github.com/Kyza/bdbuilder.git"
   },
   "authors": [
     "Kyza",

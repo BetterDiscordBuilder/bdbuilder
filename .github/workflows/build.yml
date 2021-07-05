@@ -33,7 +33,7 @@ jobs:
         run: npm i
 
       - name: build core
-        run: npm run build
+        run: npm run build:no-spam
 
       - name: bump package version (master)
         if: ${{ 'refs/heads/master' == github.ref }}
