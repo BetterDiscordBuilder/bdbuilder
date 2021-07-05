@@ -1,6 +1,6 @@
 {
   "name": "@inve1951/bdbuilder",
-  "version": "1.2.2-preview.0",
+  "version": "1.2.2",
   "description": "Enhanced plugins transpiler for BetterDiscord. Allows you to build plugin with multiple files at once.",
   "main": "./dist/bdbuilder.min.js",
   "dependencies": {
