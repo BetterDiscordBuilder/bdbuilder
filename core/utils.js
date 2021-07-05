@@ -54,7 +54,8 @@ formatString.bind = string => {
 };
 
 export function resolveModule(mod) {
-    return path.resolve(path.join(__dirname, "..", "node_modules", mod));
+    return __non_webpack_require__.resolve(mod);
+    return a;
 };
 
 export function resolveRawGithub(pluginName, path) {
@@ -121,8 +122,7 @@ export function getBuilderConfig() {
         }
     }
 
-    var c = _.merge(defaultConfig, config);
-    return c;
+    return _.merge(defaultConfig, config);
 };
 
 const Utils = {

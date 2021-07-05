@@ -1,12 +1,12 @@
 import Utils, {getAddonConfig, nullish, resolveModule} from "../utils.js";
 
 export default function js() {
-    return Utils.isDevelopment
+    return Utils.isProduction
         ? {
             loader: resolveModule("babel-loader"),
             options: {
                 presets: [
-                    ["@babel/typescript", {esModuleInterop: true}]
+                    ["@babel/preset-typescript", {esModuleInterop: true}]
                 ],
                 plugins: [
                     "@babel/plugin-transform-react-jsx",
