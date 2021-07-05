@@ -27,5 +27,6 @@ declare module "common/apis/clyde";
 declare module "common/apis/strings";
 declare module "common/apis/commands";
 declare module "react-spring";
+declare module "lodash";
 
 declare module "*.scss";

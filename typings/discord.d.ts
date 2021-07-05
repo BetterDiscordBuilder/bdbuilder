@@ -13,6 +13,12 @@ declare interface UserObject {
     getAvatarURL: (showServerAvatar?: boolean, animate?: boolean) => string;
     createdAt: Date;
     bannerURL: string;
+    bot: boolean;
+    discriminator: string;
+    bio: string;
+    bannerColor: null | string;
+    avatar: string;
+    system: boolean;
 }
 
 declare interface GuildObject {
@@ -59,7 +65,7 @@ declare module "@discord/utils" {
 declare module "@discord/components" {
     export type TooltipOptions = { tooltipClassName?: string; text?: string, position?: "top", spacing?: "8", children?: any };
     export function Tooltip({ text, position, spacing, children }: TooltipOptions): ReactElement;
-    export function TooltipContainer({ text, position, spacing }: TooltipOptions): ReactElement;
+    export function TooltipContainer({ text, position, spacing, children }: TooltipOptions & {className?: string}): ReactElement;
     export function TextInput(props: { value: string, onChange: (value: string) => void, placeholder: string }): ReactElement;
     export function SlideIn(): ReactElement;
     export function TransitionGroup(): ReactElement;
@@ -252,6 +258,7 @@ declare module "@discord/stores" {
     }
     export const Info: {
         getSessionId: () => string;
+        getCurrentUser: () => UserObject;
     };
     export const Status: {
         getStatus(userId: string): void | "online" | "dnd" | "idle";
@@ -266,7 +273,7 @@ declare module "@discord/stores" {
 
     };
     export const UserProfile: {
-        getUserProfile(): undefined | {
+        getUserProfile(userId: string): undefined | {
             connectedAccounts: UserProfileConnection[]
         };
         isFetching: (userId: string) => boolean;
@@ -336,6 +343,7 @@ declare module "@discord/actions" {
     }
     export const GuildActions: {
         requestMembersById: (guildId: string, memberId: string) => void;
+        transitionToGuildSync: (guildId: string, channelId?: string, messageId?: string) => void;
     }
 }
 

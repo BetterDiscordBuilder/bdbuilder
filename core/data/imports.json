@@ -32,7 +32,7 @@
         "SelectedChannels": "BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId')",
         "Info": "BdApi.findModuleByProps('getSessionId')",
         "Status": "BdApi.findModuleByProps('getStatus')",
-        "Users": "BdApi.findModuleByProps('getUser')",
+        "Users": "BdApi.findModuleByProps('getUser', 'getCurrentUser')",
         "SettingsStore": "BdApi.findModuleByProps('afkTimeout', 'status')",
         "UserProfile": "BdApi.findModuleByProps('getUserProfile')",
         "Members": "BdApi.findModuleByProps('getMember')",
