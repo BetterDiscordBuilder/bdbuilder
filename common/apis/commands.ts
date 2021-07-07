@@ -73,7 +73,8 @@ export function registerCommand(caller: string, options: Command) {
     const cmd = Object.assign({}, options, {
         __registerId: caller,
         applicationId: "betterdiscord",
-        type: Types.BOT
+        type: Types.BOT,
+        target: 1
     });
     DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
 

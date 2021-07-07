@@ -225,6 +225,7 @@ declare module "@discord/stores" {
 
     export const SettingsStore: {
         status: "dnd" | "idle" | "online" | "offline";
+        theme: "light" | "dark"
     }
 
     export const Messages: {
@@ -238,7 +239,7 @@ declare module "@discord/stores" {
         getMessages: (channelId: string) => any;
     };
     export const Channels: {
-        getChannel: () => {
+        getChannel: (channelId: string) => {
             id: string;
             name: string;
             description: string;

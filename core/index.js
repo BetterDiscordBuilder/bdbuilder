@@ -18,12 +18,13 @@ import ExternalModules from "./modules";
 import ZLibraryTemplate from "./templates/plugin.template";
 import Logger from "./logger.js";
 
-console.log("Starting Compilation.");
 
 const {argv} = yargs(hideBin(process.argv));
 Utils.init(argv.plugin || argv.theme, argv);
 config();
 
+Logger.log("Compilation Started.");
+if (Utils.shouldWatch) Logger.log("Watching content.")
 /* Ensure Directories */
 // fs.ensureDirSync(path.join(__dirname, "..", "releases"));
 // fs.ensureDirSync(path.join(__dirname, "..", "plugins"));
@@ -35,7 +36,7 @@ const pluginConfig = Utils.getAddonConfig();
 
 if (~Object.keys(argv).indexOf("plugin")) {
     const buildConfig = {
-        mode: "production",
+        mode: Utils.isDevelopment ? "development" : "production",
         target: "node",
         entry: Utils.getPath(),
         output: {

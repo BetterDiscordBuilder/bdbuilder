@@ -4,8 +4,14 @@ export function switchCase<T>(caze: any, cases: any[], defaultValue?: T): T {
             const [tester, value] = caseTest;
 
             if (typeof tester === "function") {
-                if (tester(caze)) return value;
-            } else if (Object.is(caze, tester)) return value;
+                if (tester(caze)) {
+                    if (typeof value === "function") return value(caze);
+                    return value;
+                }
+            } else if (Object.is(caze, tester)) {
+                if (typeof value === "function") return value(caze);
+                return value;
+            };
         } else if (typeof caseTest === "object") {
             if (typeof caseTest.test === "function") {
                 if (caseTest.test(caze)) return caseTest.value;
