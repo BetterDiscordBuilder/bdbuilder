@@ -39,14 +39,14 @@ jobs:
         if: ${{ 'refs/heads/master' == github.ref }}
         run: |
           git config --local user.email "actions@github.com"
-          git config --local user.name "BDBuilder"
+          git config --local user.name "BDBuilder builder"
           npm version patch -m "bump package version to %s"
 
       - name: bump package version (pre-release)
         if: ${{ 'refs/heads/master' != github.ref }}
         run: |
           git config --local user.email "actions@github.com"
-          git config --local user.name "BDBuilder"
+          git config --local user.name "BDBuilder builder"
           npm version prerelease --preid preview -m "bump package version to %s"
 
       - name: publish
