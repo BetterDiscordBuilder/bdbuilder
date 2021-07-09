@@ -5,7 +5,9 @@ on:
   push:
     branches:
       - master
-      - feature/*
+      - feature/**
+    paths-ignore:
+      - '**.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

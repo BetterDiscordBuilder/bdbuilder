@@ -8,30 +8,30 @@ Release to the official NPM registry is pending. In the meanwhile install from t
 
 #### 1. Tell `npm` that the `@betterdiscordbuilder` scope is located at GH and not NPM:
 
-    ```sh
-    echo '@betterdiscordbuilder:registry=https://npm.pkg.github.com' >> .npmrc
-    ```
+```sh
+echo '@betterdiscordbuilder:registry=https://npm.pkg.github.com' >> .npmrc
+```
 
 #### 2. Tell `npm` to use your GH account to access the `@betterdiscordbuilder` scope:
 
-   [Create an access token](https://github.com/settings/tokens/new?description=GH%20NPM%20registry&scopes=repo%2Cread%3Apackages) for your GH account with the following permissions:
+[Create an access token](https://github.com/settings/tokens/new?description=GH%20NPM%20registry&scopes=repo%2Cread%3Apackages) for your GH account with the following permissions:
 
-    - `repo`
-    - `read:packages`
+- `repo`
+- `read:packages`
 
-   Run the following command:
-   
-   ```sh
-   npm login --scope=@betterdiscordbuilder --registry=https://npm.pkg.github.com
-   ```
-   
-   When prompted provide your GH username (in lowercase) and use the generated token as the password.
+Run the following command:
+
+```sh
+npm login --scope=@betterdiscordbuilder --registry=https://npm.pkg.github.com
+```
+
+When prompted provide your GH username (in lowercase) and use the generated token as the password.
 
 #### 3. Install the BDBuilder package
 
-   ```sh
-   npm i -D @betterdiscordbuilder/bdbuilder@latest
-   ```
+```sh
+npm i -D @betterdiscordbuilder/bdbuilder@latest
+```
 
 ## Building/Testing locally
 
