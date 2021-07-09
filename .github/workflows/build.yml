@@ -68,7 +68,7 @@ jobs:
       - name: patch package.json
         run: |
           node -e "
-          require('fs').writeFileSync(JSON.stringify(Object.assign(require('./package.json'), {
+          require('fs').writeFileSync('package.json', JSON.stringify(Object.assign(require('./package.json'), {
             name: 'bdbuilder'
           }), null, 2));"
 
