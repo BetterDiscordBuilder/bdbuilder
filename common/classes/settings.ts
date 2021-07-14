@@ -7,10 +7,10 @@ import { Dispatcher } from "@discord/modules";
 export default class SettingsManager extends Store {
     settings: any;
     pluginName: string;
-    constructor(pluginName) {
+    constructor(pluginName, defaultSettings = {}) {
         super(Dispatcher, {});
         this.pluginName = pluginName;
-        this.settings = PluginUtilities.loadSettings(pluginName, {});
+        this.settings = PluginUtilities.loadSettings(pluginName, defaultSettings);
     }
 
     get = <T>(key: string, defaultValue?: T): T => {
