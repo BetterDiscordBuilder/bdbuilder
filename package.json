@@ -1,6 +1,6 @@
 {
   "name": "@betterdiscordbuilder/bdbuilder",
-  "version": "1.2.6-preview.4",
+  "version": "1.2.8",
   "description": "Enhanced plugins transpiler for BetterDiscord. Allows you to build plugin with multiple files at once.",
   "main": "./dist/bdbuilder.min.js",
   "dependencies": {
@@ -20,6 +20,7 @@
     "babel-plugin-minify-dead-code-elimination": "^0.5.1",
     "coffee-loader": "^3.0.0",
     "css-loader": "^5.0.1",
+    "coffeescript": "^2.5.1",
     "dotenv": "^9.0.2",
     "fs-extra": "^9.0.1",
     "js-beautify": "^1.13.1",
