@@ -7,8 +7,8 @@ const loadedStrings = {};
 SettingsStore.addChangeListener(injectStrings);
 
 function injectStrings() {
-    Object.assign(Strings._proxyContext.messages, loadedStrings[Strings.getLocale()] ?? {});
-    if (loadedStrings["en-US"]) Object.assign(Strings._proxyContext.defaultMessages, loadedStrings["en-US"]);
+    Object.assign(Strings._provider._context.messages, loadedStrings[Strings.getLocale()] ?? {});
+    if (loadedStrings["en-US"]) Object.assign(Strings._provider._context.defaultMessages, loadedStrings["en-US"]);
 };
 
 export function addStrings(locale: string, strings: any) {
