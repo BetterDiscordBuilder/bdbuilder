@@ -69,7 +69,7 @@ export default class Readme {
 
     makeSrcLink(img) {
         if (this.config.build.release.public) {
-            return Utils.resolveRawGithub(this.config.info.name, `src/${img.src}`);
+            return Utils.resolveRawGithub(this.config.info.name, img.src);
         } else return `data:image/${path.extname(img.src).slice(1)};base64,${fs.readFileSync(path.resolve(Utils.getPath(), img.src)).toString("base64")}`;
     }
 
