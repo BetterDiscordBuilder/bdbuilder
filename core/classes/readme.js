@@ -64,7 +64,7 @@ export default class Readme {
                     src: this.makeSrcLink(e)
                 })
             }).join("<br/>\n")
-        }) + "<br/>"
+        }) + "<br/>";
     }
 
     makeSrcLink(img) {
