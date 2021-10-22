@@ -1,10 +1,10 @@
 {
     "react-spring": "BdApi.findModuleByProps('useSpring')",
     "@discord/utils": {
-        "joinClassNames": "BdApi.findModule(m => typeof m?.default?.default === 'function')?.default",
+        "joinClassNames": "BdApi.findModule(e => e.toString().search(/\"string\"===i\|\|\"number\"/i) > -1)",
         "useForceUpdate": "BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate",
         "Logger": "BdApi.findModuleByProps('setLogFn')?.default",
-        "Navigation": "BdApi.findModuleByProps('replaceWith')"
+        "Navigation": "BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView')"
     },
     "@discord/components": {
         "Tooltip": "BdApi.findModuleByDisplayName('Tooltip')",
@@ -14,19 +14,21 @@
         "SettingsNotice": "BdApi.findModuleByDisplayName('SettingsNotice')",
         "TransitionGroup": "BdApi.findModuleByDisplayName('TransitionGroup')",
         "Button": "BdApi.findModuleByProps('DropdownSizes')",
+        "Popout": "BdApi.findModuleByDisplayName('Popout')",
         "Flex": "BdApi.findModuleByDisplayName('Flex')",
         "Text": "BdApi.findModuleByDisplayName('Text')",
         "Card": "BdApi.findModuleByDisplayName('Card')"
     },
     "@discord/modules": {
         "Dispatcher": "BdApi.findModuleByProps('dirtyDispatch', 'subscribe')",
+        "ComponentDispatcher": "BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch",
         "EmojiUtils": "BdApi.findModuleByProps('uploadEmoji')",
         "PermissionUtils": "BdApi.findModuleByProps('computePermissions')",
         "DMUtils": "BdApi.findModuleByProps('openPrivateChannel')"
     },
     "@discord/stores": {
         "Messages": "BdApi.findModuleByProps('getMessage', 'getMessages')",
-        "Channels": "BdApi.findModuleByProps('getChannel')",
+        "Channels": "BdApi.findModuleByProps('getChannel', 'getDMFromUserId')",
         "Guilds": "BdApi.findModuleByProps('getGuild')",
         "SelectedGuilds": "BdApi.findModuleByProps('getGuildId', 'getLastSelectedGuildId')",
         "SelectedChannels": "BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId')",
@@ -52,7 +54,7 @@
     "@discord/scrollbars": "BdApi.findModuleByProps('ScrollerAuto')",
     "@discord/native": "BdApi.findModuleByProps('requireModule')",
     "@discord/flux": "Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores'))",
-    "@discord/modal": "Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal'))",
+    "@discord/modal": "Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal', 'closeAllModals'))",
     "@discord/connections": "BdApi.findModuleByProps('get', 'isSupported', 'map')",
     "@discord/sanitize": "BdApi.findModuleByProps('stringify', 'parse', 'encode')",
     "@discord/icons": "BdApi.findAllModules(m => m.displayName && ~m.toString().indexOf('currentColor')).reduce((icons, icon) => (icons[icon.displayName] = icon, icons), {})",
