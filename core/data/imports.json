@@ -47,7 +47,7 @@
         "ProfileActions": "BdApi.findModuleByProps('fetchProfile')",
         "GuildActions": "BdApi.findModuleByProps('requestMembersById')"
     },
-    "@discord/i18n": "BdApi.findModuleByProps('getLocale')",
+    "@discord/i18n": "BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function')",
     "@discord/constants": "BdApi.findModuleByProps('API_HOST')",
     "@discord/contextmenu": "module const ctx = Object.assign({}, BdApi.findModuleByProps('openContextMenu'), BdApi.findModuleByProps('MenuItem'));\nctx.Menu = ctx.default;\nreturn ctx;",
     "@discord/forms": "BdApi.findModuleByProps('FormItem')",
