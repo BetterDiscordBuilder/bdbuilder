@@ -23,7 +23,7 @@
         "Dispatcher": "BdApi.findModuleByProps('dirtyDispatch', 'subscribe')",
         "ComponentDispatcher": "BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch",
         "EmojiUtils": "BdApi.findModuleByProps('uploadEmoji')",
-        "PermissionUtils": "BdApi.findModuleByProps('computePermissions')",
+        "PermissionUtils": "BdApi.findModuleByProps('computePermissions', 'canManageUser')",
         "DMUtils": "BdApi.findModuleByProps('openPrivateChannel')"
     },
     "@discord/stores": {
