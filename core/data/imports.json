@@ -1,7 +1,7 @@
 {
     "react-spring": "BdApi.findModuleByProps('useSpring')",
     "@discord/utils": {
-        "joinClassNames": "BdApi.findModule(e => e.toString().search(/\"string\"===i\|\|\"number\"/i) > -1)",
+        "joinClassNames": "BdApi.findModule(e => e.toString().indexOf('return e.join(\" \")') > 200)",
         "useForceUpdate": "BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate",
         "Logger": "BdApi.findModuleByProps('setLogFn')?.default",
         "Navigation": "BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView')"
