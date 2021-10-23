@@ -39,7 +39,7 @@
         "UserProfile": "BdApi.findModuleByProps('getUserProfile')",
         "Members": "BdApi.findModuleByProps('getMember')",
         "Activities": "BdApi.findModuleByProps('getActivities')",
-        "Games": "BdApi.findModuleByProps('getGame')",
+        "Games": "BdApi.findModuleByProps('getGame', 'games')",
         "Auth": "BdApi.findModuleByProps('getId', 'isGuest')",
         "TypingUsers": "BdApi.findModuleByProps('isTyping')"
     },
