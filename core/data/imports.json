@@ -13,7 +13,7 @@
         "SlideIn": "BdApi.findModuleByDisplayName('SlideIn')",
         "SettingsNotice": "BdApi.findModuleByDisplayName('SettingsNotice')",
         "TransitionGroup": "BdApi.findModuleByDisplayName('TransitionGroup')",
-        "Button": "BdApi.findModuleByProps('DropdownSizes')",
+        "Button": "BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function')",
         "Popout": "BdApi.findModuleByDisplayName('Popout')",
         "Flex": "BdApi.findModuleByDisplayName('Flex')",
         "Text": "BdApi.findModuleByDisplayName('Text')",
