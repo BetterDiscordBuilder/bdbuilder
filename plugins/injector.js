@@ -1,5 +1,4 @@
 const {ConcatSource} = require("webpack-sources");
-const format = require("../modules/format");
 
 const PROCESS_ASSETS_STAGE_ADDITIONS = -200;
 
