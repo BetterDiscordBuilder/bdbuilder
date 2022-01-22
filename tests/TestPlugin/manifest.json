@@ -1,0 +1,7 @@
+{
+    "name": "TestPlugin",
+    "version": "1.0.0",
+    "description": "Just a test",
+    "author": "Strencher",
+    "library": true
+}

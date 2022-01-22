@@ -1,0 +1,67 @@
+{
+    "react-spring": "BdApi.findModuleByProps(\"useSpring\")",
+    "@discord/utils": {
+        "joinClassNames": "BdApi.findModule(m => typeof m?.default?.default === \"function\")?.default",
+        "useForceUpdate": "BdApi.findModuleByProps(\"useForceUpdate\")?.useForceUpdate",
+        "Logger": "BdApi.findModuleByProps(\"setLogFn\")?.default",
+        "Navigation": "BdApi.findModuleByProps(\"replaceWith\")"
+    },
+    "@discord/components": {
+        "Tooltip": "BdApi.findModuleByDisplayName(\"Tooltip\")",
+        "TooltipContainer": "BdApi.findModuleByProps(\"TooltipContainer\")?.TooltipContainer",
+        "TextInput": "BdApi.findModuleByDisplayName(\"TextInput\")",
+        "SlideIn": "BdApi.findModuleByDisplayName(\"SlideIn\")",
+        "SettingsNotice": "BdApi.findModuleByDisplayName(\"SettingsNotice\")",
+        "TransitionGroup": "BdApi.findModuleByDisplayName(\"TransitionGroup\")",
+        "Popout": "BdApi.findModuleByProps(\"Popout\")",
+        "Button": "BdApi.findModuleByProps(\"DropdownSizes\")",
+        "Flex": "BdApi.findModuleByDisplayName(\"Flex\")",
+        "Text": "BdApi.findModuleByDisplayName(\"Text\")",
+        "Card": "BdApi.findModuleByDisplayName(\"Card\")"
+    },
+    "@discord/modules": {
+        "Dispatcher": "BdApi.findModuleByProps(\"dirtyDispatch\", \"subscribe\")",
+        "ComponentDispatcher": "BdApi.findModuleByProps(\"ComponentDispatch\").ComponentDispatch",
+        "EmojiUtils": "BdApi.findModuleByProps(\"uploadEmoji\")",
+        "PermissionUtils": "BdApi.findModuleByProps(\"computePermissions\")",
+        "DMUtils": "BdApi.findModuleByProps(\"openPrivateChannel\")"
+    },
+    "@discord/stores": {
+        "Messages": "BdApi.findModuleByProps(\"getMessage\", \"getMessages\")",
+        "Channels": "BdApi.findModuleByProps(\"getChannel\")",
+        "Guilds": "BdApi.findModuleByProps(\"getGuild\")",
+        "SelectedGuilds": "BdApi.findModuleByProps(\"getGuildId\", \"getLastSelectedGuildId\")",
+        "SelectedChannels": "BdApi.findModuleByProps(\"getChannelId\", \"getLastSelectedChannelId\")",
+        "Info": "BdApi.findModuleByProps(\"getSessionId\")",
+        "Status": "BdApi.findModuleByProps(\"getStatus\")",
+        "Users": "BdApi.findModuleByProps(\"getUser\", \"getCurrentUser\")",
+        "SettingsStore": "BdApi.findModuleByProps(\"afkTimeout\", \"status\")",
+        "UserProfile": "BdApi.findModuleByProps(\"getUserProfile\")",
+        "Members": "BdApi.findModuleByProps(\"getMember\")",
+        "Activities": "BdApi.findModuleByProps(\"getActivities\")",
+        "Games": "BdApi.findModuleByProps(\"getGame\")",
+        "Auth": "BdApi.findModuleByProps(\"getId\", \"isGuest\")",
+        "TypingUsers": "BdApi.findModuleByProps(\"isTyping\")"
+    },
+    "@discord/actions": {
+        "ProfileActions": "BdApi.findModuleByProps(\"fetchProfile\")",
+        "GuildActions": "BdApi.findModuleByProps(\"requestMembersById\")"
+    },
+    "@discord/i18n": "BdApi.findModuleByProps(\"getLocale\")",
+    "@discord/constants": "BdApi.findModuleByProps(\"API_HOST\")",
+    "@discord/contextmenu": "module const ctx = Object.assign({}, BdApi.findModuleByProps(\"openContextMenu\"), BdApi.findModuleByProps(\"MenuItem\"));\nctx.Menu = ctx.default;\nreturn ctx;",
+    "@discord/forms": "BdApi.findModuleByProps(\"FormItem\")",
+    "@discord/scrollbars": "BdApi.findModuleByProps(\"ScrollerAuto\")",
+    "@discord/native": "BdApi.findModuleByProps(\"requireModule\")",
+    "@discord/flux": "Object.assign({}, BdApi.findModuleByProps(\"useStateFromStores\").default, BdApi.findModuleByProps(\"useStateFromStores\"))",
+    "@discord/modal": "Object.assign({}, BdApi.findModuleByProps(\"ModalRoot\"), BdApi.findModuleByProps(\"openModal\"))",
+    "@discord/connections": "BdApi.findModuleByProps(\"get\", \"isSupported\", \"map\")",
+    "@discord/sanitize": "BdApi.findModuleByProps(\"stringify\", \"parse\", \"encode\")",
+    "@discord/icons": "BdApi.findAllModules(m => m.displayName && ~m.toString().indexOf(\"currentColor\")).reduce((icons, icon) => (icons[icon.displayName] = icon, icons), {})",
+    "@discord/classes": {
+        "Timestamp": "BdApi.findModuleByPrototypes(\"toDate\", \"month\")",
+        "Message": "BdApi.findModuleByPrototypes(\"getReaction\", \"isSystemDM\")",
+        "User": "BdApi.findModuleByPrototypes(\"tag\")",
+        "Channel": "BdApi.findModuleByPrototypes(\"isOwner\", \"isCategory\")"
+    }
+}
