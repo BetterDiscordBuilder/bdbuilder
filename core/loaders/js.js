@@ -9,7 +9,9 @@ export default function js() {
                     ["@babel/preset-typescript", {esModuleInterop: true}]
                 ],
                 plugins: [
-                    "@babel/plugin-transform-react-jsx",
+                    ["@babel/plugin-transform-react-jsx", {
+                        useBuiltIns: true
+                    }],
                     "@babel/plugin-proposal-class-properties",
                     ["minify-dead-code-elimination"]
                 ]

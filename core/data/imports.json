@@ -16,11 +16,11 @@
         "Button": "BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function')",
         "Popout": "BdApi.findModuleByDisplayName('Popout')",
         "Flex": "BdApi.findModuleByDisplayName('Flex')",
-        "Text": "BdApi.findModuleByDisplayName('Text')",
+        "Text": "BdApi.findModuleByDisplayName('LegacyText')",
         "Card": "BdApi.findModuleByDisplayName('Card')"
     },
     "@discord/modules": {
-        "Dispatcher": "BdApi.findModuleByProps('dirtyDispatch', 'subscribe')",
+        "Dispatcher": "BdApi.findModuleByProps('dispatch', 'isDispatching')",
         "ComponentDispatcher": "BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch",
         "EmojiUtils": "BdApi.findModuleByProps('uploadEmoji')",
         "PermissionUtils": "BdApi.findModuleByProps('computePermissions', 'canManageUser')",
